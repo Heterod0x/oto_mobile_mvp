@@ -1,0 +1,93 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(src/**)",
+      "Edit(src/**)",
+      "Write(src/**)",
+      
+      "Read(tailwind.config.js)",
+      "Edit(tailwind.config.js)",
+      "Write(tailwind.config.js)",
+
+      "Read(tsconfig.json)",
+      "Edit(tsconfig.json)",
+      "Write(tsconfig.json)",
+
+      "Read(package.json)",
+      "Edit(package.json)",
+      "Write(package.json)",
+
+      "Read(README.md)",
+      "Edit(README.md)",
+      "Write(README.md)",
+
+      "Read(.claude/**)",
+      "Edit(.claude/**)",
+      "Write(.claude/**)",
+
+      "Bash(rg:*)",
+      "Bash(npx tsc:*)",
+
+      "Bash(npm run test:*)"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(rm:*)",
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(dd:*)",
+      "Bash(chmod:*)",
+      "Bash(chown:*)",
+      "Bash(mkfs.*:*)",
+      "Bash(:\\ \\|:.*)", 
+
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Bash(git config:*)",
+      "Bash(gh repo delete:*)",
+
+      "Bash(brew install:*)",
+      "Bash(apt-get purge:*)",
+      "Bash(yum remove:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm remove:*)",
+
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(nc:*)",
+      "Bash(ssh:*)",
+      "Bash(ftp:*)",
+      "Bash(telnet:*)",
+
+      "Bash(docker:*)",
+      "Bash(kubectl:*)",
+      "Bash(helm:*)",
+      "Bash(aws:*)",
+      "Bash(gcloud:*)",
+      "Bash(az:*)",
+
+      "Bash(su:*)",
+      "Bash(passwd:*)",
+      "Bash(ssh-keygen:*)",
+
+      "Read(.env.*)",
+      "Read(id_rsa)",
+      "Read(id_ed25519)",
+      "Read(**/*token*)",
+      "Read(**/*key*)",
+      "Read(**/.aws/credentials)",
+      "Read(**/.gcp/**)",
+      "Read(**/.azure/**)",
+
+      "Write(.env*)",
+      "Write(**/secrets/**)",
+      "Write(**/.npmrc)",
+      "Write(**/.gitconfig)"
+    ],
+    "defaultMode": "acceptEdits",
+    "disableBypassPermissionsMode": "disable"
+  },
+  "cleanupPeriodDays": 30
+}
