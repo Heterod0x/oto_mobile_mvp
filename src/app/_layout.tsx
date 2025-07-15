@@ -5,6 +5,7 @@ import {
 } from "@expo-google-fonts/inter";
 import { PrivyProvider } from "@privy-io/expo";
 import { PrivyElements } from "@privy-io/expo/ui";
+import Constants from "expo-constants";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 
@@ -16,8 +17,8 @@ export default function RootLayout() {
   });
   return (
     <PrivyProvider
-      appId={"cmd4amohq0271l80m1kvuuzji"}
-      clientId={"client-WY6Nkeh5iEHdTpf63kTW33bn9KALu2MJjF3qbcSv7nax1"}
+      appId={Constants.expoConfig?.extra?.privyAppId}
+      clientId={Constants.expoConfig?.extra?.privyClientId}
     >
       <Stack />
       <PrivyElements />
