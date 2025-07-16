@@ -1,10 +1,38 @@
 {
   "permissions": {
     "allow": [
-      "Read(src/**)",
-      "Edit(src/**)",
-      "Write(src/**)",
+      "Read(app/**)",
+      "Edit(app/**)",
+      "Write(app/**)",
       
+      "Read(components/**)",
+      "Edit(components/**)",
+      "Write(components/**)",
+      
+      "Read(hooks/**)",
+      "Edit(hooks/**)",
+      "Write(hooks/**)",
+      
+      "Read(services/**)",
+      "Edit(services/**)",
+      "Write(services/**)",
+      
+      "Read(utils/**)",
+      "Edit(utils/**)",
+      "Write(utils/**)",
+      
+      "Read(types/**)",
+      "Edit(types/**)",
+      "Write(types/**)",
+      
+      "Read(constants/**)",
+      "Edit(constants/**)",
+      "Write(constants/**)",
+      
+      "Read(assets/**)",
+      "Edit(assets/**)",
+      "Write(assets/**)",
+
       "Read(tailwind.config.js)",
       "Edit(tailwind.config.js)",
       "Write(tailwind.config.js)",
@@ -16,6 +44,18 @@
       "Read(package.json)",
       "Edit(package.json)",
       "Write(package.json)",
+      
+      "Read(app.json)",
+      "Edit(app.json)",
+      "Write(app.json)",
+      
+      "Read(expo-env.d.ts)",
+      "Edit(expo-env.d.ts)",
+      "Write(expo-env.d.ts)",
+      
+      "Read(metro.config.js)",
+      "Edit(metro.config.js)",
+      "Write(metro.config.js)",
 
       "Read(README.md)",
       "Edit(README.md)",
@@ -27,6 +67,8 @@
 
       "Bash(rg:*)",
       "Bash(npx tsc:*)",
+      "Bash(npm run *)",
+      "Bash(expo *)",
 
       "Bash(npm run test:*)"
     ],

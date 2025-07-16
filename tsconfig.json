@@ -4,16 +4,20 @@
     "strict": true,
     "paths": {
       "@/*": [
-        "./src/*"
+        "./*"
       ]
     },
     // Allows us to use conditional/deep imports on published packages
     "moduleResolution": "Bundler"
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
+    "**/*.ts",
+    "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
+  ],
+  "exclude": [
+    "app-example/**",
+    "node_modules/**"
   ]
 }

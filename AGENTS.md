@@ -32,17 +32,18 @@ expo install <package>  # Install expo-compatible packages
 - **Framework**: React Native with Expo (~53.0.17)
 - **Language**: TypeScript with strict mode
 - **Navigation**: Expo Router with tab-based navigation
-- **Styling**: Nativewind CSS
+- **Styling**: React Native StyleSheet
 - **State Management**: useState + Jotai + AsyncStorage + TanStack Query
 - **Authentication**: Privy Auth integration 
 
 ### Project Structure
-This project uses `src/` directory for source code with Expo Router in the project root:
+This project uses standard Expo Router structure with top-level directories:
 
 ```
 app/                      # Expo Router (project root)
 ├── _layout.tsx          # Root layout
-├── (tabs)/              # Tab navigation group
+├── index.tsx            # Main entry point
+├── (tabs)/              # Tab navigation group (planned)
 │   ├── _layout.tsx      # Tab layout
 │   ├── index.tsx        # Home tab
 │   ├── history.tsx      # History tab
@@ -50,14 +51,15 @@ app/                      # Expo Router (project root)
 │   └── profile.tsx      # Profile tab
 └── +not-found.tsx       # 404 page
 
-src/                      # Source code directory
-├── components/          # Reusable UI components
-├── screens/            # Screen components
-├── hooks/              # Custom React hooks
-├── services/           # API services
-├── utils/              # Utility functions
-├── types/              # TypeScript type definitions
-└── constants/          # Constants and configurations
+components/              # Reusable UI components
+├── LoginScreen.tsx
+└── UserScreen.tsx
+
+hooks/                   # Custom React hooks (planned)
+services/               # API services (planned)
+utils/                  # Utility functions (planned)
+types/                  # TypeScript type definitions (planned)
+constants/              # Constants and configurations (planned)
 ```
 
 ### Key Architecture Patterns
@@ -67,8 +69,9 @@ src/                      # Source code directory
    - `app/(tabs)/_layout.tsx`: Tab navigation layout with 4 tabs
    - Tab structure: Home, History, Trends, Profile
 
-2. **Path Aliases**: Uses `@/*` alias pointing to `src/` directory (configured in tsconfig.json)
-   - All imports use `@/` prefix to reference files in the `src/` directory
+2. **Path Aliases**: Uses `@/*` alias pointing to project root directory (configured in tsconfig.json)
+   - All imports use `@/` prefix to reference files from project root
+   - Example: `@/components/ComponentName`, `@/hooks/useHook`
 
 ### Backend Integration (Planned)
 - **API Base**: https://otomvp-api-78nm.onrender.com
