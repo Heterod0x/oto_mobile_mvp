@@ -17,6 +17,7 @@
 - **認証**: Privy Auth integration
 - **API**: 既存のOTO MVP Backend API を使用
 - **状態管理**: useState + jotai(global states) + AsyncStorage(persistent) + TanStack Query(api reponse cache)
+- **プロジェクト構造**: `src/` ディレクトリをソースコードのルートとして使用
 
 ### バックエンド連携
 - **API Base URL**: https://otomvp-api-78nm.onrender.com
