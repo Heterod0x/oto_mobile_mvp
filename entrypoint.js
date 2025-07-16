@@ -1,11 +1,18 @@
-// entrypoint.js
+/* eslint-disable */
 // https://docs.privy.io/basics/react-native/installation
-// Import required polyfills first
+
+import * as Crypto from 'expo-crypto';
+console.log('🔑 Expo Crypto:', Crypto.getRandomValues, Crypto.randomUUID);
+
+// privyのdocumentation通りだとerrorになるのでいろいろ追加😭
+// attach to global
+if (typeof global.crypto !== 'object') global.crypto = {};
+global.crypto.getRandomValues = Crypto.getRandomValues;
+global.crypto.randomUUID     = Crypto.randomUUID;
+
 import '@ethersproject/shims';
 import { Buffer } from 'buffer';
-import 'react-native-get-random-values';
-
-// Then import the expo router
-import 'expo-router/entry';
-// @ts-ignore
+import 'fast-text-encoding';
 global.Buffer = Buffer;
+
+import 'expo-router/entry';

@@ -10,11 +10,12 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  useFonts({
+  const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
   });
+  if (!fontsLoaded) return null;
   return (
     <PrivyProvider
       appId={Constants.expoConfig?.extra?.privyAppId}
