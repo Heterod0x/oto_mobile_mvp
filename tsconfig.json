@@ -11,6 +11,8 @@
     "moduleResolution": "Bundler"
   },
   "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
     "src/**/*.ts",
     "src/**/*.tsx",
     ".expo/types/**/*.ts",
