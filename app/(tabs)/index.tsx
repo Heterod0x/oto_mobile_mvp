@@ -4,6 +4,7 @@ import {
   RecordingPresets,
   requestRecordingPermissionsAsync,
   useAudioPlayer,
+  useAudioPlayerStatus,
   useAudioRecorder,
   useAudioRecorderState,
 } from 'expo-audio';
@@ -13,6 +14,7 @@ export default function HomeScreen() {
   const recorderState = useAudioRecorderState(recorder);
   const [uri, setUri] = useState<string | null>(null);
   const player = useAudioPlayer(uri ? { uri } : null);
+  const playerStatus = useAudioPlayerStatus(player);
 
   useEffect(() => {
     requestRecordingPermissionsAsync().catch(() => {
@@ -23,9 +25,14 @@ export default function HomeScreen() {
   useEffect(() => {
     if (recorderState.url) {
       setUri(recorderState.url);
+    }
+  }, [recorderState.url]);
+
+  useEffect(() => {
+    if (uri) {
       player.play();
     }
-  }, [recorderState.url, player]);
+  }, [uri, player]);
 
   const toggleRecording = async () => {
     if (recorderState.isRecording) {
@@ -46,6 +53,18 @@ export default function HomeScreen() {
         title={recorderState.isRecording ? 'Stop Recording' : 'Start Recording'}
         onPress={toggleRecording}
       />
+      {uri && (
+        <Button
+          title={playerStatus.playing ? 'Pause Playback' : 'Play Recording'}
+          onPress={() => {
+            if (playerStatus.playing) {
+              player.pause();
+            } else {
+              player.play();
+            }
+          }}
+        />
+      )}
     </View>
   );
 }
