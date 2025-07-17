@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 interface Caption {
   timecode: string;
@@ -22,19 +22,15 @@ export default function TranscriptSection({ captions }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Transcript</Text>
-      <FlatList
-        data={captions}
-        keyExtractor={(_, idx) => idx.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.row}>
-            <Text style={styles.time}>{item.timecode}</Text>
-            <View style={styles.textContainer}>
-              <Text style={styles.speaker}>{item.speaker}</Text>
-              <Text style={styles.caption}>{item.caption}</Text>
-            </View>
+      {captions.map((item, idx) => (
+        <View key={idx} style={styles.row}>
+          <Text style={styles.time}>{item.timecode}</Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.speaker}>{item.speaker}</Text>
+            <Text style={styles.caption}>{item.caption}</Text>
           </View>
-        )}
-      />
+        </View>
+      ))}
     </View>
   );
 }
@@ -45,7 +41,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: '#fff',
     marginBottom: 8,
-    flex: 1,
   },
   header: {
     fontSize: 18,

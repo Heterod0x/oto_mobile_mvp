@@ -1,5 +1,5 @@
 import { ClipListResponse } from "@/types/clip";
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 import ClipCard from "./ClipCard";
 
 interface Props {
@@ -17,14 +17,15 @@ export default function ClipList({ clips }: Props) {
 
   return (
     <View style={styles.listContainer}>
-      <FlatList
-        data={clips.clips}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ClipCard clip={item} />}
+      <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
-      />
+      >
+        {clips.clips.map((clip) => (
+          <ClipCard key={clip.id} clip={clip} />
+        ))}
+      </ScrollView>
     </View>
   );
 }

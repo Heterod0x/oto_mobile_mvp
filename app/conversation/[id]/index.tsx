@@ -44,13 +44,13 @@ export default function ConversationDetail() {
       )}
       
       {data && (
-        <>
+        <ScrollView style={styles.mainScroll}>
           <ClipHeader
             onCommentaryToggle={handleCommentaryToggle}
             onMusicToggle={handleMusicToggle}
           />
           <ClipList clips={data} />
-          <ScrollView style={styles.analysisScroll}>
+          <View style={styles.analysisContainer}>
             <SummarySection summary={analysis?.summary.summary} />
             <InsightSection
               suggestions={analysis?.insights.suggestions}
@@ -62,8 +62,8 @@ export default function ConversationDetail() {
               keywords={analysis?.breakdown.keywords}
             />
             <TranscriptSection captions={transcript?.captions} />
-          </ScrollView>
-        </>
+          </View>
+        </ScrollView>
       )}
     </View>
   );
@@ -84,8 +84,10 @@ const styles = StyleSheet.create({
     color: '#dc3545',
     textAlign: 'center',
   },
-  analysisScroll: {
+  mainScroll: {
     flex: 1,
+  },
+  analysisContainer: {
     paddingTop: 8,
   },
 });
