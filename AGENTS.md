@@ -1,8 +1,14 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides agent-specific guidance and workflows for AI assistants working with this repository.
 
-## Project Overview
+## Agent Resources
+
+### Primary Documentation
+- **CLAUDE.md**: Core project guidance and development commands
+- **oto-spec.md**: Comprehensive technical specification for audio recording/playback implementation
+
+### Project Context
 
 OTO Native App is a React Native Expo application that serves as the mobile version of an existing web application (OTO MVP). The app focuses on conversation recording, uploading, AI analysis, and transcription features for a conversation analysis platform.
 
@@ -90,3 +96,18 @@ constants/              # Constants and configurations (planned)
 4. **Transcription**: Timestamped segments with search functionality
 5. **Profile Management**: User settings and point system
 6. **Trend Analytics**: Global conversation data visualization
+
+## Agent Workflows
+
+### Audio Feature Implementation
+When implementing audio recording/playback features:
+1. Consult `oto-spec.md` for complete API specifications and data models
+2. Reference signed URL handling patterns for audio file access
+3. Follow status polling patterns for async conversation processing
+4. Implement error handling as documented in the specification
+
+### Code Implementation Guidelines
+- Always reference `oto-spec.md` for backend API integration patterns
+- Use TypeScript type definitions provided in the specification
+- Follow UI patterns outlined for conversation lists and audio playback
+- Implement proper authentication headers as specified

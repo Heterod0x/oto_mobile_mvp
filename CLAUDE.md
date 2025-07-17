@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 OTO Native App is a React Native Expo application that serves as the mobile version of an existing web application (OTO MVP). The app focuses on conversation recording, uploading, AI analysis, and transcription features for a conversation analysis platform.
 
+**Important Reference**: See `oto-spec.md` for detailed technical implementation guidance on audio recording, playback, API integration, and data models. This specification document provides comprehensive backend integration details and UI patterns for implementing the core audio features.
+
 ## Development Commands
 
 ### Core Commands
@@ -90,3 +92,10 @@ constants/              # Constants and configurations (planned)
 4. **Transcription**: Timestamped segments with search functionality
 5. **Profile Management**: User settings and point system
 6. **Trend Analytics**: Global conversation data visualization
+
+**Implementation Notes**: Refer to `oto-spec.md` for:
+- Complete API endpoint documentation and data flow
+- Audio playback implementation with signed URLs
+- UI patterns for conversation lists, clip playback, and transcript display
+- Status polling patterns for async processing
+- Error handling strategies for file uploads and playback
