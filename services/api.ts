@@ -78,13 +78,13 @@ export async function fetchConversations(
   return (await res.json()) as ConversationDTO[];
 }
 
-import { ClipDTO } from "@/types/clip";
+import { ClipListResponse } from "@/types/clip";
 
 export async function fetchClips(
   conversationId: string,
   userId: string,
   token: string
-): Promise<ClipDTO[]> {
+): Promise<ClipListResponse> {
   const url = `${API_BASE_URL}/clip/list?conversation_id=${conversationId}`;
   const res = await fetch(url, {
     headers: {
@@ -95,5 +95,5 @@ export async function fetchClips(
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`);
   }
-  return (await res.json()) as ClipDTO[];
+  return (await res.json()) as ClipListResponse;
 }

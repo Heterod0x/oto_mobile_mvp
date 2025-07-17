@@ -1,20 +1,52 @@
-import { FlatList } from 'react-native';
-import ClipCard from './ClipCard';
-import { ClipDTO } from '@/types/clip';
+import { ClipListResponse } from "@/types/clip";
+import { FlatList, View, Text, StyleSheet } from "react-native";
+import ClipCard from "./ClipCard";
 
 interface Props {
-  clips: ClipDTO[];
+  clips: ClipListResponse;
 }
 
 export default function ClipList({ clips }: Props) {
+  if (!clips.clips || clips.clips.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No clips available</Text>
+      </View>
+    );
+  }
+
   return (
-    <FlatList
-      data={clips}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <ClipCard clip={item} />}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingHorizontal: 8, paddingVertical: 16 }}
-    />
+    <View style={styles.listContainer}>
+      <FlatList
+        data={clips.clips}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ClipCard clip={item} />}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainer}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  listContainer: {
+    backgroundColor: '#f8f9fa',
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+  },
+});

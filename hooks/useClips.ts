@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { usePrivy } from '@privy-io/expo';
 import { fetchClips } from '@/services/api';
-import { ClipDTO } from '@/types/clip';
+import { ClipListResponse } from '@/types/clip';
 
 export default function useClips(conversationId: string) {
   const { user, getAccessToken } = usePrivy();
-  const [data, setData] = useState<ClipDTO[] | null>(null);
+  const [data, setData] = useState<ClipListResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

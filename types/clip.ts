@@ -14,4 +14,12 @@ export interface ClipDTO {
   description: string;
   comment: string;
   captions: ClipCaptionDTO[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClipListResponse {
+  clips: ClipDTO[];
+  conversation_id: string;
+  total: number;
 }
