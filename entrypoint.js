@@ -16,3 +16,4 @@ import 'fast-text-encoding';
 global.Buffer = Buffer;
 
 import 'expo-router/entry';
+import './src/notifeeService';
