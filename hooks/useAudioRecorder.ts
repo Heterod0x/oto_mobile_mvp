@@ -1,98 +1,86 @@
-import { useState } from 'react';
-import { Audio, InterruptionModeIOS } from 'expo-av';
-import notifee from '@notifee/react-native';
+import notifee, { AndroidImportance } from "@notifee/react-native";
+import { Audio, InterruptionModeIOS } from "expo-av";
+import { useState } from "react";
 
 export default function useAudioRecorder() {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [lastRecordingUri, setLastRecordingUri] = useState<string | null>(null);
-  const [recordingDuration, setRecordingDuration] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
 
+  // 録音開始
   const startRecording = async () => {
-    try {
-      const permission = await Audio.requestPermissionsAsync();
-      if (!permission.granted) {
-        return;
+    // マイク権限リクエスト
+    const { granted } = await Audio.requestPermissionsAsync();
+    if (!granted) return;
+
+    // iOS バックグラウンド設定含む Audio モード
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: true,
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: true,
+      interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+    });
+
+    // Expo-AV で録音オブジェクト生成
+    const { recording } = await Audio.Recording.createAsync(
+      Audio.RecordingOptionsPresets.HIGH_QUALITY
+    );
+    recording.setOnRecordingStatusUpdate((status) => {
+      if (status.isRecording) {
+        setDuration(status.durationMillis);
       }
+    });
 
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: true,
-        interruptionModeIOS: InterruptionModeIOS.DuckOthers,
-      });
+    // 通知チャンネル作成（低重要度で十分）
+    const channelId = await notifee.createChannel({
+      id: "recording",
+      name: "録音サービス",
+      importance: AndroidImportance.LOW,
+    });
 
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
+    // フォアグラウンドサービス通知を表示し、サービスを起動
+    await notifee.displayNotification({
+      title: "録音中",
+      body: "バックグラウンドでも録音を続けています",
+      android: {
+        channelId,
+        asForegroundService: true, // フォアグラウンドサービス通知を指定 :contentReference[oaicite:1]{index=1}
+        ongoing: true, // ユーザー操作で消せないように
+        pressAction: { id: "default" }, // タップでアプリ起動
+      },
+    });
 
-      recording.setOnRecordingStatusUpdate((status) => {
-        if (status.isRecording) {
-          setRecordingDuration(status.durationMillis);
-        }
-      });
-
-      const channelId = await notifee.createChannel({
-        id: 'recording',
-        name: 'Recording',
-      });
-
-      await notifee.displayNotification({
-        title: 'Android audio background recording',
-        body: 'recording...',
-        android: {
-          channelId,
-          asForegroundService: true,
-        },
-      });
-
-      setRecording(recording);
-      setRecordingDuration(0);
-    } catch (err) {
-      console.error('Failed to start recording', err);
-    }
+    setRecording(recording);
   };
 
+  // 録音停止
   const stopRecording = async () => {
-    try {
-      if (!recording) return;
-      await recording.stopAndUnloadAsync();
-      const uri = recording.getURI();
-      setLastRecordingUri(uri ?? null);
-      setRecording(null);
-      setRecordingDuration(0);
-      console.log('Recording stopped. URI:', uri);
-      await notifee.stopForegroundService();
-    } catch (err) {
-      console.error('Failed to stop recording', err);
-    }
+    if (!recording) return;
+    await recording.stopAndUnloadAsync();
+    setLastRecordingUri(recording.getURI()!);
+    setRecording(null);
+    setDuration(0);
+
+    // フォアグラウンドサービス停止 → Promise が解決されて通知も消える :contentReference[oaicite:2]{index=2}
+    await notifee.stopForegroundService();
   };
 
+  // 録音再生
   const playLastRecording = async () => {
-    try {
-      if (!lastRecordingUri) {
-        console.log('No recording URI found');
-        return;
-      }
-      console.log('Playing recording from URI:', lastRecordingUri);
-      const { sound } = await Audio.Sound.createAsync({ uri: lastRecordingUri });
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-      await sound.playAsync();
-      console.log('Playback started');
-    } catch (err) {
-      console.error('Failed to play recording', err);
-    }
+    if (!lastRecordingUri) return;
+    const { sound } = await Audio.Sound.createAsync({ uri: lastRecordingUri });
+    sound.setOnPlaybackStatusUpdate((s) => {
+      if (s.isLoaded && s.didJustFinish) sound.unloadAsync();
+    });
+    await sound.playAsync();
   };
 
-  return { 
-    recording, 
-    startRecording, 
-    stopRecording, 
-    playLastRecording, 
+  return {
+    recording,
+    startRecording,
+    stopRecording,
+    playLastRecording,
     lastRecordingUri,
-    recordingDuration
+    duration,
   };
 }
