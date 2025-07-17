@@ -1,13 +1,21 @@
 import ClipList from "@/components/clips/ClipList";
 import ClipHeader from "@/components/clips/ClipHeader";
+import SummarySection from "@/components/analysis/SummarySection";
+import InsightSection from "@/components/analysis/InsightSection";
+import BreakdownSection from "@/components/analysis/BreakdownSection";
+import TranscriptSection from "@/components/analysis/TranscriptSection";
 import useClips from "@/hooks/useClips";
+import useAnalysis from "@/hooks/useAnalysis";
+import useTranscript from "@/hooks/useTranscript";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { ActivityIndicator, Text, View, StyleSheet } from "react-native";
+import { ActivityIndicator, Text, View, StyleSheet, ScrollView } from "react-native";
 
 export default function ConversationDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const conversationId = Array.isArray(id) ? id[0] : id;
   const { data, loading, error } = useClips(conversationId);
+  const { data: analysis } = useAnalysis(conversationId);
+  const { data: transcript } = useTranscript(conversationId);
 
   const handleCommentaryToggle = (enabled: boolean) => {
     // TODO: Implement commentary clip filtering
@@ -37,16 +45,24 @@ export default function ConversationDetail() {
       
       {data && (
         <>
-          <ClipHeader 
+          <ClipHeader
             onCommentaryToggle={handleCommentaryToggle}
             onMusicToggle={handleMusicToggle}
           />
           <ClipList clips={data} />
-          <View style={styles.futureContent}>
-            <Text style={styles.placeholderText}>
-              Future content will be added here
-            </Text>
-          </View>
+          <ScrollView style={styles.analysisScroll}>
+            <SummarySection summary={analysis?.summary.summary} />
+            <InsightSection
+              suggestions={analysis?.insights.suggestions}
+              scores={analysis?.insights}
+            />
+            <BreakdownSection
+              metadata={analysis?.breakdown.metadata}
+              sentiment={analysis?.breakdown.sentiment}
+              keywords={analysis?.breakdown.keywords}
+            />
+            <TranscriptSection captions={transcript?.captions} />
+          </ScrollView>
         </>
       )}
     </View>
@@ -68,15 +84,8 @@ const styles = StyleSheet.create({
     color: '#dc3545',
     textAlign: 'center',
   },
-  futureContent: {
+  analysisScroll: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  placeholderText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    paddingTop: 8,
   },
 });
