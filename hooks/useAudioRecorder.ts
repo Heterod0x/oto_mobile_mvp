@@ -4,6 +4,7 @@ import notifee from '@notifee/react-native';
 
 export default function useAudioRecorder() {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [lastRecordingUri, setLastRecordingUri] = useState<string | null>(null);
 
   const startRecording = async () => {
     try {
@@ -47,6 +48,7 @@ export default function useAudioRecorder() {
     try {
       if (!recording) return;
       await recording.stopAndUnloadAsync();
+      setLastRecordingUri(recording.getURI() ?? null);
       setRecording(null);
       await notifee.stopForegroundService();
     } catch (err) {
@@ -54,5 +56,20 @@ export default function useAudioRecorder() {
     }
   };
 
-  return { recording, startRecording, stopRecording };
+  const playLastRecording = async () => {
+    try {
+      if (!lastRecordingUri) return;
+      const { sound } = await Audio.Sound.createAsync({ uri: lastRecordingUri });
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          sound.unloadAsync();
+        }
+      });
+      await sound.playAsync();
+    } catch (err) {
+      console.error('Failed to play recording', err);
+    }
+  };
+
+  return { recording, startRecording, stopRecording, playLastRecording, lastRecordingUri };
 }
