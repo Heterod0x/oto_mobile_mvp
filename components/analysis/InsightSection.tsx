@@ -34,9 +34,11 @@ export default function InsightSection({ suggestions, scores }: Props) {
       )}
       {scores && (
         <View>
-          {Object.entries(scores).map(([k, v]) => (
-            <Text key={k} style={styles.score}>{`${k}: ${toPercent(v)}`}</Text>
-          ))}
+          {Object.entries(scores)
+            .filter(([k, v]) => typeof v === 'number' && !isNaN(v))
+            .map(([k, v]) => (
+              <Text key={k} style={styles.score}>{`${k}: ${toPercent(v)}`}</Text>
+            ))}
         </View>
       )}
     </View>
