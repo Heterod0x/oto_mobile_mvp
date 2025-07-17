@@ -15,4 +15,12 @@ import { Buffer } from 'buffer';
 import 'fast-text-encoding';
 global.Buffer = Buffer;
 
+import notifee from '@notifee/react-native';
+
+notifee.registerForegroundService(() => {
+  return new Promise(() => {
+    console.log('Foreground service started');
+  });
+});
+
 import 'expo-router/entry';
