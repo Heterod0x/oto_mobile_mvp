@@ -18,7 +18,13 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.yourcompany.otoapp"
+      "package": "com.yourcompany.otoapp",
+      "permissions": [
+        "WAKE_LOCK",
+        "RECORD_AUDIO",
+        "FOREGROUND_SERVICE_MICROPHONE"
+      ]
+
     },
     "web": {
       "bundler": "metro",
@@ -42,7 +48,18 @@
       ],
       "expo-secure-store",
       "expo-web-browser",
-      "expo-font"
+      "expo-font",
+      "./android-manifest.plugin",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraMavenRepos": [
+              "../../node_modules/@notifee/react-native/android/libs"
+            ]
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
