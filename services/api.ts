@@ -1,3 +1,4 @@
+import { ConversationDTO } from "@/types/conversation";
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "https://otomvp-api-78nm.onrender.com";
 
 export interface UploadResponse {
@@ -59,4 +60,20 @@ export async function uploadAudio(
     xhr.setRequestHeader("Oto-User-Id", userId);
     xhr.send(formData);
   });
+}
+
+export async function fetchConversations(
+  userId: string,
+  token: string
+): Promise<ConversationDTO[]> {
+  const res = await fetch(`${API_BASE_URL}/conversation/list`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as ConversationDTO[];
 }
