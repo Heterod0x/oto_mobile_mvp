@@ -77,3 +77,59 @@ export async function fetchConversations(
   }
   return (await res.json()) as ConversationDTO[];
 }
+
+import { ClipListResponse } from "@/types/clip";
+
+export async function fetchClips(
+  conversationId: string,
+  userId: string,
+  token: string
+): Promise<ClipListResponse> {
+  const url = `${API_BASE_URL}/clip/list?conversation_id=${conversationId}`;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as ClipListResponse;
+}
+
+import { AnalysisResponse, TranscriptResponse } from '@/types/analysis';
+
+export async function fetchAnalysis(
+  conversationId: string,
+  userId: string,
+  token: string
+): Promise<AnalysisResponse> {
+  const res = await fetch(`${API_BASE_URL}/analysis/${conversationId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as AnalysisResponse;
+}
+
+export async function fetchTranscript(
+  conversationId: string,
+  userId: string,
+  token: string
+): Promise<TranscriptResponse> {
+  const res = await fetch(`${API_BASE_URL}/transcript/${conversationId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as TranscriptResponse;
+}

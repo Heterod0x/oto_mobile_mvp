@@ -1,20 +1,21 @@
 import { ConversationDTO } from "@/types/conversation";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 interface Props {
   conversation: ConversationDTO;
+  onPress?: () => void;
 }
 
-export default function ConversationItem({ conversation }: Props) {
+export default function ConversationItem({ conversation, onPress }: Props) {
   const date = new Date(conversation.created_at);
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.textContainer}>
         <Text style={styles.title}>{conversation.file_name}</Text>
         <Text style={styles.date}>{date.toLocaleString()}</Text>
       </View>
       <Text style={styles.status}>{conversation.status}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

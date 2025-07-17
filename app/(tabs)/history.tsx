@@ -1,9 +1,19 @@
-import { FlatList, View, Text, ActivityIndicator } from "react-native";
+import { FlatList, View, Text, ActivityIndicator, Alert } from "react-native";
+import { useRouter } from "expo-router";
 import useConversations from "@/hooks/useConversations";
 import ConversationItem from "@/components/history/ConversationItem";
 
 export default function HistoryScreen() {
   const { data, loading, error } = useConversations();
+  const router = useRouter();
+
+  const handlePress = (item: any) => {
+    if (item.status === "failed") {
+      Alert.alert("Error", "このファイルはエラー状態です。");
+      return;
+    }
+    router.push(`/conversation/${item.id}`);
+  };
 
   if (loading) {
     return (
@@ -25,7 +35,12 @@ export default function HistoryScreen() {
     <FlatList
       data={data || []}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <ConversationItem conversation={item} />}
+      renderItem={({ item }) => (
+        <ConversationItem
+          conversation={item}
+          onPress={() => handlePress(item)}
+        />
+      )}
       ListEmptyComponent={
         <View style={{ alignItems: "center", marginTop: 40 }}>
           <Text>No conversations yet.</Text>
