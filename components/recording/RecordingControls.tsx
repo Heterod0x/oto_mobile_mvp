@@ -8,6 +8,7 @@ export default function RecordingControls() {
     stopRecording,
     playLastRecording,
     lastRecordingUri,
+    recordingDuration,
   } = useAudioRecorder();
 
   return (
@@ -16,9 +17,17 @@ export default function RecordingControls() {
         title={recording ? 'Stop Recording' : 'Start Recording'}
         onPress={recording ? stopRecording : startRecording}
       />
-      {recording && <Text>Recording...</Text>}
+      {recording && (
+        <View style={{ alignItems: 'center' }}>
+          <Text>Recording...</Text>
+          <Text>Duration: {Math.floor(recordingDuration / 1000)}s</Text>
+        </View>
+      )}
       {!recording && lastRecordingUri && (
-        <Button title="Play Last Recording" onPress={playLastRecording} />
+        <View style={{ alignItems: 'center' }}>
+          <Text>Recording saved at: {lastRecordingUri}</Text>
+          <Button title="Play Last Recording" onPress={playLastRecording} />
+        </View>
       )}
     </View>
   );
