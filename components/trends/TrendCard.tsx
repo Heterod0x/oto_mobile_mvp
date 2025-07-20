@@ -28,9 +28,15 @@ export default function TrendCard({ trend }: Props) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 12,
-    marginBottom: 8,
+    marginHorizontal: 12,
+    width: 260,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   title: {
     fontSize: 16,

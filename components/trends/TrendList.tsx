@@ -1,5 +1,5 @@
 import { Trend } from '@/types/trend';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import TrendCard from './TrendCard';
 
 interface Props {
@@ -17,24 +17,32 @@ export default function TrendList({ trends, title }: Props) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.listContainer}>
       <Text style={styles.sectionTitle}>{title}</Text>
-      {trends.map((t) => (
-        <TrendCard key={t.id} trend={t} />
-      ))}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainer}
+      >
+        {trends.map((t) => (
+          <TrendCard key={t.id} trend={t} />
+        ))}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
+  listContainer: {
     paddingVertical: 12,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 8,
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
   },
   emptyContainer: {
     padding: 16,

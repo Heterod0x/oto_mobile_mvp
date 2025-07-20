@@ -1,6 +1,6 @@
 import { Microtrend } from '@/types/trend';
 import { View, Text, StyleSheet } from 'react-native';
-import TrendCard from './TrendCard';
+import MicrotrendCard from './MicrotrendCard';
 
 interface Props {
   microtrends: Microtrend[] | null;
@@ -19,7 +19,7 @@ export default function MicrotrendList({ microtrends }: Props) {
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Microtrends</Text>
       {microtrends.map((t) => (
-        <TrendCard key={t.id} trend={t as any} />
+        <MicrotrendCard key={t.id} microtrend={t} />
       ))}
     </View>
   );
