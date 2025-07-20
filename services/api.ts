@@ -132,7 +132,6 @@ export async function fetchClipAudioUrl(
   return res.text();
 }
 
-import { AnalysisResponse, TranscriptResponse } from '@/types/analysis';
 
 export async function fetchAnalysis(
   conversationId: string,
