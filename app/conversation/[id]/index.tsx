@@ -1,12 +1,12 @@
 import BreakdownSection from "@/components/analysis/BreakdownSection";
+import HighlightSection from "@/components/analysis/HighlightSection";
 import InsightSection from "@/components/analysis/InsightSection";
 import SummarySection from "@/components/analysis/SummarySection";
-import TranscriptSection from "@/components/analysis/TranscriptSection";
 import ClipHeader from "@/components/clips/ClipHeader";
 import ClipList from "@/components/clips/ClipList";
 import useAnalysis from "@/hooks/useAnalysis";
 import useClips from "@/hooks/useClips";
-import useTranscript from "@/hooks/useTranscript";
+import useConversation from "@/hooks/useConversation";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import {
   ActivityIndicator,
@@ -25,7 +25,7 @@ export default function ConversationDetail() {
   const insets = useSafeAreaInsets();
   const { data, loading, error } = useClips(conversationId);
   const { data: analysis } = useAnalysis(conversationId);
-  const { data: transcript } = useTranscript(conversationId);
+  const { data: conversation } = useConversation(conversationId);
 
   const handleCommentaryToggle = (enabled: boolean) => {
     // TODO: Implement commentary clip filtering
@@ -39,7 +39,7 @@ export default function ConversationDetail() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Conversation", headerShown: false }} />
+      <Stack.Screen options={{ title: "Analysis", headerShown: false }} />
 
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <TouchableOpacity
@@ -48,7 +48,7 @@ export default function ConversationDetail() {
         >
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Conversation</Text>
+        <Text style={styles.headerTitle}>Analysis</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -82,7 +82,13 @@ export default function ConversationDetail() {
               sentiment={analysis?.breakdown.sentiment}
               keywords={analysis?.breakdown.keywords}
             />
-            <TranscriptSection captions={transcript?.captions} />
+            <HighlightSection highlights={analysis?.highlights} />
+            {conversation?.points !== undefined && (
+              <View style={styles.pointsSection}>
+                <Text style={styles.pointsLabel}>Points Earned</Text>
+                <Text style={styles.pointsValue}>+ {conversation.points}</Text>
+              </View>
+            )}
           </View>
         </ScrollView>
       )}
@@ -137,5 +143,25 @@ const styles = StyleSheet.create({
   },
   analysisContainer: {
     paddingTop: 8,
+  },
+  pointsSection: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#fff",
+    marginBottom: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+  },
+  pointsLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 4,
+  },
+  pointsValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333",
   },
 });

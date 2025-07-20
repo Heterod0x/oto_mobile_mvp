@@ -1,7 +1,7 @@
-import { FlatList, View, Text, ActivityIndicator, Alert } from "react-native";
-import { useRouter } from "expo-router";
-import useConversations from "@/hooks/useConversations";
 import ConversationItem from "@/components/history/ConversationItem";
+import useConversations from "@/hooks/useConversations";
+import { useRouter } from "expo-router";
+import { ActivityIndicator, Alert, FlatList, Text, View } from "react-native";
 
 export default function HistoryScreen() {
   const { data, loading, error } = useConversations();
@@ -43,7 +43,7 @@ export default function HistoryScreen() {
       )}
       ListEmptyComponent={
         <View style={{ alignItems: "center", marginTop: 40 }}>
-          <Text>No conversations yet.</Text>
+          <Text>No uploaded files yet.</Text>
         </View>
       }
     />

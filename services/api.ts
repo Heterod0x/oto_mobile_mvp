@@ -78,6 +78,23 @@ export async function fetchConversations(
   return (await res.json()) as ConversationDTO[];
 }
 
+export async function fetchConversation(
+  conversationId: string,
+  userId: string,
+  token: string
+): Promise<ConversationDTO> {
+  const res = await fetch(`${API_BASE_URL}/conversation/${conversationId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as ConversationDTO;
+}
+
 import { ClipListResponse } from "@/types/clip";
 
 export async function fetchClips(
