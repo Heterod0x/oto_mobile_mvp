@@ -1,6 +1,6 @@
-import { Microtrend } from '@/types/trend';
-import { View, Text, StyleSheet } from 'react-native';
-import MicrotrendCard from './MicrotrendCard';
+import { Microtrend } from "@/types/trend";
+import { StyleSheet, Text, View } from "react-native";
+import MicrotrendCard from "./MicrotrendCard";
 
 interface Props {
   microtrends: Microtrend[] | null;
@@ -17,7 +17,7 @@ export default function MicrotrendList({ microtrends }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Microtrends</Text>
+      <Text style={styles.sectionTitle}>Emerging Micro-Trends</Text>
       {microtrends.map((t) => (
         <MicrotrendCard key={t.id} microtrend={t} />
       ))}
@@ -32,15 +32,15 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   emptyContainer: {
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
 });
