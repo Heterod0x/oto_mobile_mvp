@@ -168,3 +168,58 @@ export async function fetchMicrotrends(): Promise<MicrotrendListResponse> {
   }
   return (await res.json()) as MicrotrendListResponse;
 }
+
+import { UserProfileResponse, UserUpdateRequest } from '@/types/user';
+import { PointBalanceResponse } from '@/types/point';
+
+export async function fetchUser(
+  userId: string,
+  token: string
+): Promise<UserProfileResponse> {
+  const res = await fetch(`${API_BASE_URL}/user/get`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as UserProfileResponse;
+}
+
+export async function updateUser(
+  userId: string,
+  token: string,
+  data: UserUpdateRequest
+): Promise<UserProfileResponse> {
+  const res = await fetch(`${API_BASE_URL}/user/update`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as UserProfileResponse;
+}
+
+export async function fetchPointBalance(
+  userId: string,
+  token: string
+): Promise<PointBalanceResponse> {
+  const res = await fetch(`${API_BASE_URL}/point/get`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as PointBalanceResponse;
+}
