@@ -9,7 +9,7 @@ export default function EarningsPanel({ balance }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.balance}>{balance ? `${balance.points} pts` : '-- pts'}</Text>
-      <Text style={styles.caption}>ご利用可能ポイント</Text>
+      <Text style={styles.caption}>Earning</Text>
     </View>
   );
 }

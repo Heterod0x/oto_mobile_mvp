@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { usePrivy } from '@privy-io/expo';
 import useUserProfile from '@/hooks/useUserProfile';
 import usePointBalance from '@/hooks/usePointBalance';
@@ -34,10 +34,16 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <ProfileForm profile={profile} onSave={handleSave} loading={loadingProfile} />
-      <EarningsPanel balance={balance} />
-      <AccountActions />
-    </ScrollView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={80}
+    >
+      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
+        <ProfileForm profile={profile} onSave={handleSave} loading={loadingProfile} />
+        <EarningsPanel balance={balance} />
+        <AccountActions />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
