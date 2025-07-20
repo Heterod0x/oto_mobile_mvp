@@ -1,16 +1,16 @@
+import { fetchClipAudioUrl } from "@/services/api";
 import { ClipDTO } from "@/types/clip";
 import { Ionicons } from "@expo/vector-icons";
 import { usePrivy } from "@privy-io/expo";
 import { Audio } from "expo-av";
 import { useRef, useState } from "react";
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from "react-native";
-import { fetchClipAudioUrl } from "@/services/api";
 
 interface Props {
   clip: ClipDTO;
@@ -21,12 +21,25 @@ export default function ClipCard({ clip, onPress }: Props) {
   const { user, getAccessToken } = usePrivy();
   const soundRef = useRef<Audio.Sound | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlay = async () => {
     if (!user || loading) return;
+    // If already playing, stop playback
+    if (soundRef.current) {
+      const status = await soundRef.current.getStatusAsync();
+      if (status.isLoaded && status.isPlaying) {
+        await soundRef.current.stopAsync();
+        await soundRef.current.unloadAsync();
+        soundRef.current = null;
+        setIsPlaying(false);
+        return;
+      }
+    }
+
     setLoading(true);
     try {
-      const token = (await getAccessToken()) || '';
+      const token = (await getAccessToken()) || "";
       const url = await fetchClipAudioUrl(clip.id, user.id, token);
       if (soundRef.current) {
         await soundRef.current.unloadAsync();
@@ -37,12 +50,14 @@ export default function ClipCard({ clip, onPress }: Props) {
         if (status.isLoaded && status.didJustFinish) {
           sound.unloadAsync();
           soundRef.current = null;
+          setIsPlaying(false);
         }
       });
       soundRef.current = sound;
       await sound.playAsync();
+      setIsPlaying(true);
     } catch (err) {
-      console.error('Failed to play clip', err);
+      console.error("Failed to play clip", err);
     } finally {
       setLoading(false);
     }
@@ -62,7 +77,11 @@ export default function ClipCard({ clip, onPress }: Props) {
         {loading ? (
           <ActivityIndicator size="small" color="#fff" />
         ) : (
-          <Ionicons name="play" size={24} color="#fff" />
+          <Ionicons
+            name={isPlaying ? "pause" : "play"}
+            size={24}
+            color="#fff"
+          />
         )}
       </TouchableOpacity>
       <View style={styles.textContainer}>
