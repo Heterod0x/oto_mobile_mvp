@@ -115,6 +115,23 @@ export async function fetchClips(
   return (await res.json()) as ClipListResponse;
 }
 
+export async function fetchClipAudioUrl(
+  clipId: string,
+  userId: string,
+  token: string,
+): Promise<string> {
+  const res = await fetch(`${API_BASE_URL}/clip/${clipId}/audio`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Oto-User-Id': userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return res.text();
+}
+
 import { AnalysisResponse, TranscriptResponse } from '@/types/analysis';
 
 export async function fetchAnalysis(

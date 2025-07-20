@@ -1,6 +1,16 @@
 import { ClipDTO } from "@/types/clip";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { usePrivy } from "@privy-io/expo";
+import { Audio } from "expo-av";
+import { useRef, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import { fetchClipAudioUrl } from "@/services/api";
 
 interface Props {
   clip: ClipDTO;
@@ -8,15 +18,53 @@ interface Props {
 }
 
 export default function ClipCard({ clip, onPress }: Props) {
+  const { user, getAccessToken } = usePrivy();
+  const soundRef = useRef<Audio.Sound | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handlePlay = async () => {
+    if (!user || loading) return;
+    setLoading(true);
+    try {
+      const token = (await getAccessToken()) || '';
+      const url = await fetchClipAudioUrl(clip.id, user.id, token);
+      if (soundRef.current) {
+        await soundRef.current.unloadAsync();
+        soundRef.current = null;
+      }
+      const { sound } = await Audio.Sound.createAsync({ uri: url });
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          sound.unloadAsync();
+          soundRef.current = null;
+        }
+      });
+      soundRef.current = sound;
+      await sound.playAsync();
+    } catch (err) {
+      console.error('Failed to play clip', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <View style={styles.playButton}>
-        <Ionicons name="play" size={24} color="#fff" />
-      </View>
+      <TouchableOpacity
+        onPress={handlePlay}
+        style={styles.playButton}
+        activeOpacity={0.7}
+      >
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Ionicons name="play" size={24} color="#fff" />
+        )}
+      </TouchableOpacity>
       <View style={styles.textContainer}>
         <Text numberOfLines={3} style={styles.description}>
           {clip.description || clip.title}
