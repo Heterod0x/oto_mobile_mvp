@@ -150,3 +150,21 @@ export async function fetchTranscript(
   }
   return (await res.json()) as TranscriptResponse;
 }
+
+import { TrendListResponse, MicrotrendListResponse } from '@/types/trend';
+
+export async function fetchTrends(): Promise<TrendListResponse> {
+  const res = await fetch(`${API_BASE_URL}/trend/trends`);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as TrendListResponse;
+}
+
+export async function fetchMicrotrends(): Promise<MicrotrendListResponse> {
+  const res = await fetch(`${API_BASE_URL}/trend/microtrends`);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as MicrotrendListResponse;
+}
