@@ -1,5 +1,17 @@
 import { ConversationDTO } from "@/types/conversation";
-export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "https://otomvp-api-78nm.onrender.com";
+
+import { ClipListResponse } from "@/types/clip";
+
+import { MicrotrendListResponse, TrendListResponse } from "@/types/trend";
+
+import { AnalysisResponse, TranscriptResponse } from "@/types/analysis";
+import {
+  PointBalanceResponse,
+  UserProfileResponse,
+  UserUpdateRequest,
+} from "@/types/user";
+export const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL || "https://otomvp-api-78nm.onrender.com";
 
 export interface UploadResponse {
   id: string;
@@ -69,7 +81,7 @@ export async function fetchConversations(
   const res = await fetch(`${API_BASE_URL}/conversation/list`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {
@@ -86,7 +98,7 @@ export async function fetchConversation(
   const res = await fetch(`${API_BASE_URL}/conversation/${conversationId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {
@@ -94,8 +106,6 @@ export async function fetchConversation(
   }
   return (await res.json()) as ConversationDTO;
 }
-
-import { ClipListResponse } from "@/types/clip";
 
 export async function fetchClips(
   conversationId: string,
@@ -106,7 +116,7 @@ export async function fetchClips(
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {
@@ -118,12 +128,12 @@ export async function fetchClips(
 export async function fetchClipAudioUrl(
   clipId: string,
   userId: string,
-  token: string,
+  token: string
 ): Promise<string> {
   const res = await fetch(`${API_BASE_URL}/clip/${clipId}/audio`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {
@@ -131,7 +141,6 @@ export async function fetchClipAudioUrl(
   }
   return res.text();
 }
-
 
 export async function fetchAnalysis(
   conversationId: string,
@@ -141,7 +150,7 @@ export async function fetchAnalysis(
   const res = await fetch(`${API_BASE_URL}/analysis/${conversationId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {
@@ -158,7 +167,7 @@ export async function fetchTranscript(
   const res = await fetch(`${API_BASE_URL}/transcript/${conversationId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {
@@ -166,8 +175,6 @@ export async function fetchTranscript(
   }
   return (await res.json()) as TranscriptResponse;
 }
-
-import { TrendListResponse, MicrotrendListResponse } from '@/types/trend';
 
 export async function fetchTrends(): Promise<TrendListResponse> {
   const res = await fetch(`${API_BASE_URL}/trend/trends`);
@@ -185,13 +192,14 @@ export async function fetchMicrotrends(): Promise<MicrotrendListResponse> {
   return (await res.json()) as MicrotrendListResponse;
 }
 
-import { UserProfileResponse, PointBalanceResponse, UserUpdateRequest } from '@/types/user';
-
-export async function fetchUserProfile(userId: string, token: string): Promise<UserProfileResponse> {
+export async function fetchUserProfile(
+  userId: string,
+  token: string
+): Promise<UserProfileResponse> {
   const res = await fetch(`${API_BASE_URL}/user/get`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {
@@ -203,14 +211,14 @@ export async function fetchUserProfile(userId: string, token: string): Promise<U
 export async function updateUserProfile(
   data: UserUpdateRequest,
   userId: string,
-  token: string,
+  token: string
 ): Promise<UserProfileResponse> {
   const res = await fetch(`${API_BASE_URL}/user/update`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
     body: JSON.stringify(data),
   });
@@ -220,11 +228,14 @@ export async function updateUserProfile(
   return (await res.json()) as UserProfileResponse;
 }
 
-export async function fetchPointBalance(userId: string, token: string): Promise<PointBalanceResponse> {
+export async function fetchPointBalance(
+  userId: string,
+  token: string
+): Promise<PointBalanceResponse> {
   const res = await fetch(`${API_BASE_URL}/point/get`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Oto-User-Id': userId,
+      "Oto-User-Id": userId,
     },
   });
   if (!res.ok) {

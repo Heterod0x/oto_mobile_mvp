@@ -6,12 +6,20 @@ export default function useAudioRecorder() {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [lastRecordingUri, setLastRecordingUri] = useState<string | null>(null);
   const [duration, setDuration] = useState<number>(0);
+  const [permissionStatus, setPermissionStatus] = useState<string>("");
+  const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   // 録音開始
   const startRecording = async () => {
-    // マイク権限リクエスト
-    const { granted } = await Audio.requestPermissionsAsync();
-    if (!granted) return;
+    try {
+      // マイク権限リクエスト
+      const { granted, status } = await Audio.requestPermissionsAsync();
+      setPermissionStatus(`Permission: ${status}, Granted: ${granted}`);
+      if (!granted) {
+        console.log("録音権限が拒否されました");
+        return;
+      }
 
     // iOS バックグラウンド設定含む Audio モード
     await Audio.setAudioModeAsync({
@@ -21,10 +29,34 @@ export default function useAudioRecorder() {
       interruptionModeIOS: InterruptionModeIOS.DuckOthers,
     });
 
-    // Expo-AV で録音オブジェクト生成
-    const { recording } = await Audio.Recording.createAsync(
-      Audio.RecordingOptionsPresets.HIGH_QUALITY
-    );
+    // Expo-AV で録音オブジェクト生成 - エミュレーター対応のより確実な設定
+    const recordingOptions = {
+      android: {
+        extension: '.m4a',
+        outputFormat: Audio.AndroidOutputFormat.MPEG_4,
+        audioEncoder: Audio.AndroidAudioEncoder.AAC,
+        sampleRate: 44100,
+        numberOfChannels: 2,
+        bitRate: 128000,
+      },
+      ios: {
+        extension: '.m4a',
+        outputFormat: Audio.IOSOutputFormat.MPEG4AAC,
+        audioQuality: Audio.IOSAudioQuality.HIGH,
+        sampleRate: 44100,
+        numberOfChannels: 2,
+        bitRate: 128000,
+        linearPCMBitDepth: 16,
+        linearPCMIsBigEndian: false,
+        linearPCMIsFloat: false,
+      },
+      web: {
+        mimeType: 'audio/webm;codecs=opus',
+        bitsPerSecond: 128000,
+      },
+    };
+
+    const { recording } = await Audio.Recording.createAsync(recordingOptions);
     recording.setOnRecordingStatusUpdate((status) => {
       if (status.isRecording) {
         setDuration(status.durationMillis);
@@ -50,7 +82,12 @@ export default function useAudioRecorder() {
       },
     });
 
-    setRecording(recording);
+      setRecording(recording);
+      console.log("録音開始成功");
+    } catch (error) {
+      console.error("録音開始エラー:", error);
+      setPermissionStatus(`エラー: ${error instanceof Error ? error.message : "不明なエラー"}`);
+    }
   };
 
   // 録音停止
@@ -65,14 +102,53 @@ export default function useAudioRecorder() {
     await notifee.stopForegroundService();
   };
 
+  // 現在の再生を停止
+  const stopCurrentPlayback = async () => {
+    if (currentSound) {
+      try {
+        await currentSound.stopAsync();
+        await currentSound.unloadAsync();
+      } catch (error) {
+        console.log("既存の音声停止中にエラー:", error);
+      }
+      setCurrentSound(null);
+      setIsPlaying(false);
+    }
+  };
+
   // 録音再生
   const playLastRecording = async () => {
     if (!lastRecordingUri) return;
-    const { sound } = await Audio.Sound.createAsync({ uri: lastRecordingUri });
-    sound.setOnPlaybackStatusUpdate((s) => {
-      if (s.isLoaded && s.didJustFinish) sound.unloadAsync();
-    });
-    await sound.playAsync();
+    
+    // 既に再生中なら停止
+    if (isPlaying && currentSound) {
+      await stopCurrentPlayback();
+      return;
+    }
+
+    // 既存の音声があれば停止
+    await stopCurrentPlayback();
+
+    try {
+      setIsPlaying(true);
+      const { sound } = await Audio.Sound.createAsync({ uri: lastRecordingUri });
+      setCurrentSound(sound);
+      
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          setIsPlaying(false);
+          setCurrentSound(null);
+          sound.unloadAsync();
+        }
+      });
+      
+      await sound.playAsync();
+    } catch (error) {
+      console.error("再生エラー:", error);
+      setIsPlaying(false);
+      setCurrentSound(null);
+      throw error;
+    }
   };
 
   return {
@@ -80,7 +156,10 @@ export default function useAudioRecorder() {
     startRecording,
     stopRecording,
     playLastRecording,
+    stopCurrentPlayback,
     lastRecordingUri,
     duration,
+    permissionStatus,
+    isPlaying,
   };
 }
