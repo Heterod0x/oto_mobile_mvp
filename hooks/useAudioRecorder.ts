@@ -9,6 +9,8 @@ export default function useAudioRecorder() {
   const [permissionStatus, setPermissionStatus] = useState<string>("");
   const [currentSound, setCurrentSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [playbackPosition, setPlaybackPosition] = useState<number>(0);
+  const [playbackDuration, setPlaybackDuration] = useState<number>(0);
 
   // 録音開始
   const startRecording = async () => {
@@ -113,6 +115,7 @@ export default function useAudioRecorder() {
       }
       setCurrentSound(null);
       setIsPlaying(false);
+      setPlaybackPosition(0);
     }
   };
 
@@ -135,10 +138,15 @@ export default function useAudioRecorder() {
       setCurrentSound(sound);
       
       sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          setIsPlaying(false);
-          setCurrentSound(null);
-          sound.unloadAsync();
+        if (status.isLoaded) {
+          setPlaybackPosition(status.positionMillis || 0);
+          setPlaybackDuration(status.durationMillis || 0);
+          if (status.didJustFinish) {
+            setIsPlaying(false);
+            setCurrentSound(null);
+            setPlaybackPosition(0);
+            sound.unloadAsync();
+          }
         }
       });
       
@@ -147,6 +155,7 @@ export default function useAudioRecorder() {
       console.error("再生エラー:", error);
       setIsPlaying(false);
       setCurrentSound(null);
+      setPlaybackPosition(0);
       throw error;
     }
   };
@@ -161,5 +170,7 @@ export default function useAudioRecorder() {
     duration,
     permissionStatus,
     isPlaying,
+    playbackPosition,
+    playbackDuration,
   };
 }

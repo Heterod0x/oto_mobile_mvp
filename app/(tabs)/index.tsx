@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import RecordingControls from '@/components/recording/RecordingControls';
 
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.contentContainer}>
+      <ScrollView 
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.headerSection}>
           <Text style={styles.headerTitle}>OTO</Text>
           <Text style={styles.headerSubtitle}>Record, Analyze & Share Conversations</Text>
@@ -13,7 +16,7 @@ export default function HomeScreen() {
         <View style={styles.recordingSection}>
           <RecordingControls />
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -24,9 +27,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   contentContainer: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 20,
     paddingVertical: 32,
+    paddingBottom: 50,
   },
   headerSection: {
     alignItems: 'center',
