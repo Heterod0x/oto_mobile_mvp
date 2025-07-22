@@ -33,7 +33,10 @@
     },
     "extra": {
       "privyAppId": "cmcc0wydx0086js0l5e5gj35e",
-      "privyClientId": "client-WY6N2jYhjSc3MBZXJinPQz9XWMUCQsJie5DXhXSBMz9WP"
+      "privyClientId": "client-WY6N2jYhjSc3MBZXJinPQz9XWMUCQsJie5DXhXSBMz9WP",
+      "eas": {
+        "projectId": "95038bb5-0d99-4299-9e31-d335b82fc561"
+      }
     },
     "plugins": [
       "expo-router",
