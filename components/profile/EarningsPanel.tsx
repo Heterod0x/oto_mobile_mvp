@@ -1,15 +1,21 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { PointBalanceResponse } from '@/types/user';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { PointBalanceResponse, ClaimableAmountResponse } from '@/types/user';
 
 interface Props {
   balance: PointBalanceResponse | null;
+  claimable?: ClaimableAmountResponse | null;
+  onClaim?: () => void;
+  claiming?: boolean;
 }
 
-export default function EarningsPanel({ balance }: Props) {
+export default function EarningsPanel({ balance, claimable, onClaim, claiming }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.balance}>{balance ? `${balance.points} pts` : '-- pts'}</Text>
       <Text style={styles.caption}>Earning</Text>
+      {claimable && claimable.amount > 0 && onClaim && (
+        <Button title={`Claim ${claimable.display_amount}`} onPress={onClaim} disabled={claiming} />
+      )}
     </View>
   );
 }

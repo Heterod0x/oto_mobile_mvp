@@ -2,6 +2,7 @@ import { View, Text, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platfo
 import { usePrivy } from '@privy-io/expo';
 import useUserProfile from '@/hooks/useUserProfile';
 import usePointBalance from '@/hooks/usePointBalance';
+import usePointClaim from '@/hooks/usePointClaim';
 import ProfileForm from '@/components/profile/ProfileForm';
 import EarningsPanel from '@/components/profile/EarningsPanel';
 import AccountActions from '@/components/profile/AccountActions';
@@ -10,6 +11,7 @@ export default function ProfileScreen() {
   const { user } = usePrivy();
   const { data: profile, loading: loadingProfile, save } = useUserProfile();
   const { data: balance } = usePointBalance();
+  const { data: claimable, claim, claiming } = usePointClaim();
 
   if (!user) return null;
 
@@ -41,7 +43,12 @@ export default function ProfileScreen() {
     >
       <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
         <ProfileForm profile={profile} onSave={handleSave} loading={loadingProfile} />
-        <EarningsPanel balance={balance} />
+        <EarningsPanel
+          balance={balance}
+          claimable={claimable}
+          onClaim={claim}
+          claiming={claiming}
+        />
         <AccountActions />
       </ScrollView>
     </KeyboardAvoidingView>

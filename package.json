@@ -12,6 +12,8 @@
     "typecheck": "npx tsc --noEmit"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.28.0",
+    "@craftzdog/react-native-buffer": "^6.1.0",
     "@ethersproject/shims": "^5.8.0",
     "@expo-google-fonts/inter": "^0.4.1",
     "@expo/config-plugins": "^10.1.2",
@@ -22,6 +24,10 @@
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@solana-mobile/mobile-wallet-adapter-protocol": "^2.2.2",
+    "@solana-mobile/mobile-wallet-adapter-protocol-web3js": "^2.2.2",
+    "@solana/web3.js": "^1.98.2",
+    "assert": "^2.1.0",
     "buffer": "^6.0.3",
     "expo": "~53.0.17",
     "expo-apple-authentication": "~7.2.4",
@@ -56,8 +62,10 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
+    "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
+    "text-encoding": "^0.7.0",
     "viem": "^2.31.7"
   },
   "devDependencies": {

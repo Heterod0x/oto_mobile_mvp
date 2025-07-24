@@ -1,6 +1,8 @@
 /* eslint-disable */
 // https://docs.privy.io/basics/react-native/installation
 
+import 'react-native-get-random-values';
+import 'react-native-url-polyfill/auto';
 import * as Crypto from 'expo-crypto';
 console.log('🔑 Expo Crypto:', Crypto.getRandomValues, Crypto.randomUUID);
 
@@ -11,9 +13,11 @@ global.crypto.getRandomValues = Crypto.getRandomValues;
 global.crypto.randomUUID     = Crypto.randomUUID;
 
 import '@ethersproject/shims';
-import { Buffer } from 'buffer';
-import 'fast-text-encoding';
+import { Buffer } from '@craftzdog/react-native-buffer';
+import { TextEncoder, TextDecoder } from 'text-encoding';
 global.Buffer = Buffer;
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 import notifee from '@notifee/react-native';
 

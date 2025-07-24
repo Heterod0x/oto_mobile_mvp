@@ -243,3 +243,49 @@ export async function fetchPointBalance(
   }
   return (await res.json()) as PointBalanceResponse;
 }
+
+export interface ClaimableAmountResponse {
+  amount: number;
+  display_amount: string;
+}
+
+export async function fetchClaimableAmount(
+  userId: string,
+  token: string,
+): Promise<ClaimableAmountResponse> {
+  const res = await fetch(`${API_BASE_URL}/point/claimable_amount`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Oto-User-Id": userId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as ClaimableAmountResponse;
+}
+
+export interface ClaimResponse {
+  signature: string;
+  success: boolean;
+}
+
+export async function claimPoints(
+  txBase64: string,
+  userId: string,
+  token: string,
+): Promise<ClaimResponse> {
+  const res = await fetch(`${API_BASE_URL}/point/claim`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      "Oto-User-Id": userId,
+    },
+    body: JSON.stringify({ tx_base64: txBase64 }),
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as ClaimResponse;
+}
