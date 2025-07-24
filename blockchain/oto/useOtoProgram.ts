@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { PublicKey, Transaction } from '@solana/web3.js';
 import * as anchor from '@coral-xyz/anchor';
 import { useConnection } from '../connection';
-import { useMWAWallet } from '../wallet';
+import { usePrivyWallet } from '../privyWallet';
 
 import otoIdl from './idl/oto.json';
 
@@ -10,7 +10,7 @@ const ADMIN_PUBLIC_KEY = new PublicKey('8T4je6ro8VbfRvhUJqrpYPrce6aVKoFB75EyJ68e
 
 export const useOtoProgram = () => {
   const connection = useConnection();
-  const anchorWallet = useMWAWallet();
+  const anchorWallet = usePrivyWallet();
 
   const provider = useMemo(() => {
     if (!anchorWallet) return null;
