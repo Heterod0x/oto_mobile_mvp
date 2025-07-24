@@ -11,7 +11,7 @@ export default function ProfileScreen() {
   const { user } = usePrivy();
   const { data: profile, loading: loadingProfile, save } = useUserProfile();
   const { data: balance } = usePointBalance();
-  const { data: claimable, claim, claiming } = usePointClaim();
+  const { data: claimable, claim, claiming, error: claimError } = usePointClaim();
 
   if (!user) return null;
 
@@ -48,6 +48,7 @@ export default function ProfileScreen() {
           claimable={claimable}
           onClaim={claim}
           claiming={claiming}
+          error={claimError}
         />
         <AccountActions />
       </ScrollView>

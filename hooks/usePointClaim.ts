@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { usePrivy } from '@privy-io/expo';
-import { fetchClaimableAmount, claimPoints } from '@/services/api';
-import { ClaimableAmountResponse, ClaimResponse } from '@/types/user';
-import { useOtoProgram } from '@/blockchain/oto/useOtoProgram';
+import { useOtoProgram } from "@/blockchain/oto/useOtoProgram";
+import { claimPoints, fetchClaimableAmount } from "@/services/api";
+import { ClaimableAmountResponse, ClaimResponse } from "@/types/user";
+import { usePrivy } from "@privy-io/expo";
+import { useEffect, useState } from "react";
 
 export default function usePointClaim() {
   const { user, getAccessToken } = usePrivy();
@@ -19,7 +19,7 @@ export default function usePointClaim() {
       setLoading(true);
       setError(null);
       try {
-        const token = (await getAccessToken()) || '';
+        const token = (await getAccessToken()) || "";
         const res = await fetchClaimableAmount(user.id, token);
         if (!canceled) setData(res);
       } catch (err) {
@@ -42,11 +42,17 @@ export default function usePointClaim() {
     setClaiming(true);
     setError(null);
     try {
-      const token = (await getAccessToken()) || '';
+      const token = (await getAccessToken()) || "";
       const tx = await buildClaimTx(data.amount);
-      if (!tx) throw new Error('wallet not ready');
-      const serialized = tx.serialize({ requireAllSignatures: false }).toString('base64');
+      if (!tx) throw new Error("wallet not ready");
+
+      const serialized = tx
+        .serialize({ requireAllSignatures: false })
+        .toString("base64");
       const res = await claimPoints(serialized, user.id, token);
+      if (!res.success) {
+        throw new Error("Claim failed");
+      }
       // refresh claimable amount after success
       const refreshed = await fetchClaimableAmount(user.id, token);
       setData(refreshed);
