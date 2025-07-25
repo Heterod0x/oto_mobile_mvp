@@ -20,6 +20,11 @@ export default function RootLayout() {
     <PrivyProvider
       appId={Constants.expoConfig?.extra?.privyAppId}
       clientId={Constants.expoConfig?.extra?.privyClientId}
+      config={{
+        embeddedWallets: {
+          solana: { createOnLogin: "all-users" },
+        },
+      } as any}
     >
       <Stack screenOptions={{ headerShown: false }} />
       <PrivyElements />
