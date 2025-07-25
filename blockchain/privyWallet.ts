@@ -7,13 +7,13 @@ export const usePrivyWallet = (): anchor.Wallet | null => {
   const sol = useEmbeddedSolanaWallet();
 
   useEffect(() => {
-    if (isNotCreated(sol)) {
+    if (sol && isNotCreated(sol)) {
       sol.create().catch(() => {});
     }
   }, [sol]);
 
   return useMemo(() => {
-    const wallet = sol.wallets?.[0];
+    const wallet = sol?.wallets?.[0];
     if (!wallet) return null;
     const publicKey = new PublicKey(wallet.address);
     const sign = async (tx: Transaction) => {
@@ -29,5 +29,5 @@ export const usePrivyWallet = (): anchor.Wallet | null => {
       signTransaction: sign,
       signAllTransactions: async (txs: Transaction[]) => Promise.all(txs.map(sign)),
     } as anchor.Wallet;
-  }, [sol.wallets]);
+  }, [sol]);
 };
