@@ -27,6 +27,7 @@
     "@react-navigation/native": "^7.1.6",
     "@solana-mobile/mobile-wallet-adapter-protocol": "^2.2.2",
     "@solana-mobile/mobile-wallet-adapter-protocol-web3js": "^2.2.2",
+    "@solana/spl-token": "^0.4.13",
     "@solana/web3.js": "^1.98.2",
     "assert": "^2.1.0",
     "buffer": "^6.0.3",

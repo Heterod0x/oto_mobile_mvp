@@ -1,5 +1,14 @@
 import * as anchor from "@coral-xyz/anchor";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import {
+  PublicKey,
+  Transaction,
+  SystemProgram,
+} from "@solana/web3.js";
+import {
+  getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 import { useMemo } from "react";
 import { useConnection } from "../connection";
 import { usePrivyWallet } from "../privyWallet";
@@ -27,32 +36,48 @@ export const useOtoProgram = () => {
     return new anchor.Program(otoIdl as anchor.Idl, PROGRAM_ID, provider);
   }, [provider]);
 
+  // Build an unsigned claim transaction.
+  // The returned transaction must be forwarded to the server
+  // where the admin signer adds their signature and submits it.
   const buildClaimTx = async (amount: number) => {
     if (!program || !anchorWallet) return null;
+
+    const [otoPda] = PublicKey.findProgramAddressSync(
+      [Buffer.from("oto")],
+      PROGRAM_ID,
+    );
+
+    const otoAccount = await program.account.oto.fetch(otoPda);
+    const mint = otoAccount.mint as PublicKey;
+
+    const userTokenAccount = await getAssociatedTokenAddress(
+      mint,
+      anchorWallet.publicKey,
+      false,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+    );
+
     const ix = await program.methods
       .mintOto(new anchor.BN(amount))
       .accounts({
+        oto: otoPda,
         beneficiary: anchorWallet.publicKey,
-        tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
         payer: ADMIN_PUBLIC_KEY,
+        userTokenAccount,
+        mint,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
       })
       .instruction();
 
-    const latest = await connection.getLatestBlockhash();
-    return new Transaction({ ...latest, feePayer: ADMIN_PUBLIC_KEY }).add(ix);
+    const { blockhash } = await connection.getLatestBlockhash();
+    return new Transaction({
+      feePayer: ADMIN_PUBLIC_KEY,
+      recentBlockhash: blockhash,
+    }).add(ix);
   };
 
-  const claimAndSend = async (amount: number) => {
-    if (!program) return;
-    return program.methods
-      .mintOto(new anchor.BN(amount))
-      .accounts({
-        beneficiary: anchorWallet!.publicKey,
-        tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-        payer: ADMIN_PUBLIC_KEY,
-      })
-      .rpc();
-  };
-
-  return { program, buildClaimTx, claimAndSend };
+  return { program, buildClaimTx };
 };
