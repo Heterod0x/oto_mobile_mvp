@@ -14,4 +14,14 @@ export interface PointBalanceResponse {
   points: number;
 }
 
+export interface ClaimableAmountResponse {
+  amount: number;
+  display_amount: string;
+}
+
+export interface ClaimResponse {
+  signature: string;
+  success: boolean;
+}
+
 export interface UserUpdateRequest extends Partial<UserProfileResponse> {}

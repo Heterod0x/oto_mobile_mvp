@@ -1,0 +1,1018 @@
+{
+  "address": "otoUzj3eLyJXSkB4DmfGR63eHBMQ9tqPHJaGX8ySSsY",
+  "metadata": {
+    "name": "oto",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "apply_asset_offer",
+      "discriminator": [217, 184, 254, 135, 240, 116, 52, 130],
+      "accounts": [
+        {
+          "name": "asset_offer",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [111, 102, 102, 101, 114]
+              },
+              {
+                "kind": "account",
+                "path": "purchase_request"
+              },
+              {
+                "kind": "account",
+                "path": "asset_metadata.file_hash",
+                "account": "AssetMetadata"
+              }
+            ]
+          }
+        },
+        {
+          "name": "provider",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "purchase_request"
+        },
+        {
+          "name": "asset_metadata"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim",
+      "discriminator": [62, 198, 214, 193, 213, 159, 108, 210],
+      "accounts": [
+        {
+          "name": "oto",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [111, 116, 111]
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114]
+              },
+              {
+                "kind": "arg",
+                "path": "user_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "beneficiary",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "user_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "beneficiary"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 105, 110, 116]
+              }
+            ]
+          },
+          "relations": ["oto"]
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "user_id",
+          "type": "string"
+        },
+        {
+          "name": "claim_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initialize_oto",
+      "discriminator": [9, 66, 201, 112, 210, 40, 68, 39],
+      "accounts": [
+        {
+          "name": "oto",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [111, 116, 111]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 105, 110, 116]
+              }
+            ]
+          }
+        },
+        {
+          "name": "metadata",
+          "writable": true
+        },
+        {
+          "name": "nft_collection"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "token_metadata_program",
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_user",
+      "discriminator": [111, 17, 185, 250, 60, 122, 38, 254],
+      "accounts": [
+        {
+          "name": "oto",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [111, 116, 111]
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114]
+              },
+              {
+                "kind": "arg",
+                "path": "user_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "user_id",
+          "type": "string"
+        },
+        {
+          "name": "owner",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "mint_oto",
+      "discriminator": [78, 159, 1, 127, 25, 98, 109, 135],
+      "accounts": [
+        {
+          "name": "oto",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [111, 116, 111]
+              }
+            ]
+          }
+        },
+        {
+          "name": "beneficiary",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "user_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "beneficiary"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 105, 110, 116]
+              }
+            ]
+          },
+          "relations": ["oto"]
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "register_asset",
+      "discriminator": [21, 80, 155, 149, 117, 207, 235, 16],
+      "accounts": [
+        {
+          "name": "asset_metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 115, 115, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              },
+              {
+                "kind": "arg",
+                "path": "file_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "file_hash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        },
+        {
+          "name": "date",
+          "type": "u32"
+        },
+        {
+          "name": "language",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "register_purchase_request",
+      "discriminator": [65, 80, 195, 126, 219, 2, 122, 145],
+      "accounts": [
+        {
+          "name": "purchase_request",
+          "writable": true
+        },
+        {
+          "name": "buyer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 105, 110, 116]
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyer_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "buyer"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "escrow_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "purchase_request"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "RegisterPurchaseParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "submit_transfer_proof",
+      "discriminator": [98, 53, 45, 206, 193, 190, 58, 161],
+      "accounts": [
+        {
+          "name": "transfer_proof",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 114, 111, 111, 102]
+              },
+              {
+                "kind": "account",
+                "path": "asset_offer"
+              }
+            ]
+          }
+        },
+        {
+          "name": "relayer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "purchase_request",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 105, 110, 116]
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "purchase_request"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "provider"
+        },
+        {
+          "name": "provider_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "provider"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "asset_offer"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "file_hash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        },
+        {
+          "name": "buyer_sig",
+          "type": {
+            "array": ["u8", 64]
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_point",
+      "discriminator": [89, 158, 247, 64, 0, 100, 210, 82],
+      "accounts": [
+        {
+          "name": "oto",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [111, 116, 111]
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114]
+              },
+              {
+                "kind": "arg",
+                "path": "user_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true,
+          "relations": ["oto"]
+        }
+      ],
+      "args": [
+        {
+          "name": "user_id",
+          "type": "string"
+        },
+        {
+          "name": "delta",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AssetMetadata",
+      "discriminator": [233, 0, 11, 247, 105, 205, 111, 157]
+    },
+    {
+      "name": "AssetOffer",
+      "discriminator": [60, 24, 135, 249, 88, 111, 123, 245]
+    },
+    {
+      "name": "BaseCollectionV1",
+      "discriminator": [0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "name": "Oto",
+      "discriminator": [11, 237, 61, 97, 3, 132, 38, 13]
+    },
+    {
+      "name": "PurchaseRequest",
+      "discriminator": [223, 94, 33, 8, 75, 147, 214, 83]
+    },
+    {
+      "name": "TransferProof",
+      "discriminator": [153, 86, 5, 64, 25, 221, 224, 133]
+    },
+    {
+      "name": "User",
+      "discriminator": [159, 117, 95, 227, 239, 151, 58, 236]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NotEnoughClaimableAmount",
+      "msg": "Not enough claimable amount"
+    },
+    {
+      "code": 6001,
+      "name": "Overflow",
+      "msg": "Overflow"
+    },
+    {
+      "code": 6002,
+      "name": "LanguageMismatch",
+      "msg": "Language mismatch"
+    },
+    {
+      "code": 6003,
+      "name": "DateMismatch",
+      "msg": "Date mismatch"
+    },
+    {
+      "code": 6004,
+      "name": "BudgetExhausted",
+      "msg": "Purchase budget exhausted"
+    },
+    {
+      "code": 6005,
+      "name": "BadBuyerSig",
+      "msg": "Bad buyer signature"
+    }
+  ],
+  "types": [
+    {
+      "name": "AssetMetadata",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "file_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "date",
+            "type": "u32"
+          },
+          {
+            "name": "language",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AssetOffer",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "provider",
+            "type": "pubkey"
+          },
+          {
+            "name": "claimable_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BaseCollectionV1",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "key",
+            "type": {
+              "defined": {
+                "name": "Key"
+              }
+            }
+          },
+          {
+            "name": "update_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "num_minted",
+            "type": "u32"
+          },
+          {
+            "name": "current_size",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Key",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Uninitialized"
+          },
+          {
+            "name": "AssetV1"
+          },
+          {
+            "name": "HashedAssetV1"
+          },
+          {
+            "name": "PluginHeaderV1"
+          },
+          {
+            "name": "PluginRegistryV1"
+          },
+          {
+            "name": "CollectionV1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Oto",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "nft_collection",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PurchaseRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "buyer",
+            "type": "pubkey"
+          },
+          {
+            "name": "buyer_pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "filter_language",
+            "type": "u8"
+          },
+          {
+            "name": "start_date",
+            "type": "u32"
+          },
+          {
+            "name": "end_date",
+            "type": "u32"
+          },
+          {
+            "name": "unit_price",
+            "type": "u64"
+          },
+          {
+            "name": "budget_remaining",
+            "type": "u64"
+          },
+          {
+            "name": "claimable_amount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "nonce",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RegisterPurchaseParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "buyer_pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "filter_language",
+            "type": "u8"
+          },
+          {
+            "name": "start_date",
+            "type": "u32"
+          },
+          {
+            "name": "end_date",
+            "type": "u32"
+          },
+          {
+            "name": "unit_price",
+            "type": "u64"
+          },
+          {
+            "name": "max_budget",
+            "type": "u64"
+          },
+          {
+            "name": "nonce",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferProof",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "file_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "buyer_sig",
+            "type": {
+              "array": ["u8", 64]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "User",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user_id",
+            "type": "string"
+          },
+          {
+            "name": "claimable_amount",
+            "type": "u64"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
