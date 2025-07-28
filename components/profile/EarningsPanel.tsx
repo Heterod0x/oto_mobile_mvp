@@ -15,7 +15,7 @@ export default function EarningsPanel({ balance, claimable, onClaim, claiming, e
       <Text style={styles.title}>Earnings</Text>
       <Text style={styles.balance}>{balance ? `${balance.points} pts` : '-- pts'}</Text>
       
-      {claimable && claimable.amount > 0 && (
+      {claimable && (
         <View style={styles.claimSection}>
           <Text style={styles.claimableLabel}>Available to Claim</Text>
           <Text style={styles.claimableAmount}>{claimable.display_amount} pts</Text>
@@ -24,7 +24,7 @@ export default function EarningsPanel({ balance, claimable, onClaim, claiming, e
               <Text style={styles.errorText}>{error}</Text>
             </View>
           )}
-          {onClaim && (
+          {onClaim && claimable.amount > 0 && (
             <Button title="Claim" onPress={onClaim} disabled={claiming} />
           )}
         </View>
