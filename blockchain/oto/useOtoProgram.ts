@@ -1,14 +1,10 @@
 import * as anchor from "@coral-xyz/anchor";
 import {
-  PublicKey,
-  Transaction,
-  SystemProgram,
-} from "@solana/web3.js";
-import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
+import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { useMemo } from "react";
 import { useConnection } from "../connection";
 import { usePrivyWallet } from "../privyWallet";
@@ -27,7 +23,7 @@ export const useOtoProgram = () => {
   const provider = useMemo(() => {
     if (!anchorWallet) return null;
     return new anchor.AnchorProvider(connection, anchorWallet, {
-      commitment: "processed",
+      commitment: "finalized",
     });
   }, [connection, anchorWallet]);
 
@@ -44,7 +40,7 @@ export const useOtoProgram = () => {
 
     const [otoPda] = PublicKey.findProgramAddressSync(
       [Buffer.from("oto")],
-      PROGRAM_ID,
+      PROGRAM_ID
     );
 
     const otoAccount = await program.account.oto.fetch(otoPda);
@@ -55,7 +51,7 @@ export const useOtoProgram = () => {
       anchorWallet.publicKey,
       false,
       TOKEN_PROGRAM_ID,
-      ASSOCIATED_TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
     const ix = await program.methods
@@ -72,7 +68,8 @@ export const useOtoProgram = () => {
       })
       .instruction();
 
-    const { blockhash } = await connection.getLatestBlockhash();
+    // const { blockhash } = await connection.getLatestBlockhash();
+    const { blockhash } = await connection.getLatestBlockhash("finalized");
     return new Transaction({
       feePayer: ADMIN_PUBLIC_KEY,
       recentBlockhash: blockhash,
