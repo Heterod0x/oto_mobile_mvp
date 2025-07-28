@@ -79,5 +79,10 @@ export const useOtoProgram = () => {
     }).add(ix);
   };
 
-  return { program, buildClaimTx };
+  const signTransaction = async (tx: Transaction) => {
+    if (!anchorWallet) return null;
+    return anchorWallet.signTransaction(tx);
+  };
+
+  return { program, buildClaimTx, signTransaction };
 };

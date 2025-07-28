@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function usePointClaim() {
   const { user, getAccessToken } = usePrivy();
-  const { buildClaimTx } = useOtoProgram();
+  const { buildClaimTx, signTransaction } = useOtoProgram();
   const [data, setData] = useState<ClaimableAmountResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,8 +47,11 @@ export default function usePointClaim() {
       const tx = await buildClaimTx(data.amount);
       if (!tx) throw new Error("wallet not ready");
 
-      const serialized = tx
-        .serialize({ requireAllSignatures: false })
+      const signed = await signTransaction(tx);
+      if (!signed) throw new Error("wallet not ready");
+
+      const serialized = signed
+        .serialize({ requireAllSignatures: false, verifySignatures: false })
         .toString("base64");
       const res = await claimPoints(serialized, user.id, token);
       if (!res.success) {
