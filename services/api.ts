@@ -285,7 +285,15 @@ export async function claimPoints(
     body: JSON.stringify({ tx_base64: txBase64 }),
   });
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    let errorMessage = `HTTP ${res.status}`;
+    try {
+      const errorData = await res.text();
+      console.error(`claimPoints API error - Status: ${res.status}, Response: ${errorData}`);
+      errorMessage = `HTTP ${res.status}: ${errorData}`;
+    } catch (parseError) {
+      console.error(`claimPoints API error - Status: ${res.status}, Failed to parse error response:`, parseError);
+    }
+    throw new Error(errorMessage);
   }
   return (await res.json()) as ClaimResponse;
 }

@@ -35,7 +35,7 @@ export default function usePointClaim() {
     return () => {
       canceled = true;
     };
-  }, [user]);
+  }, [getAccessToken, user]);
 
   const claim = async (): Promise<ClaimResponse | null> => {
     if (!user || !data) return null;
@@ -43,6 +43,7 @@ export default function usePointClaim() {
     setError(null);
     try {
       const token = (await getAccessToken()) || "";
+
       const tx = await buildClaimTx(data.amount);
       if (!tx) throw new Error("wallet not ready");
 
