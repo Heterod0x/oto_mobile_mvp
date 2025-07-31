@@ -1,169 +1,125 @@
-# OTO Native App - React Native Expo版
+# OTO Native App
 
-## プロジェクト概要
+[![React Native](https://img.shields.io/badge/React%20Native-0.79.5-blue.svg)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-~53.0.17-000020.svg)](https://expo.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-~5.8.3-blue.svg)](https://typescriptlang.org/)
 
-**OTO Native App**は、既存のWebアプリケーション - OTO MVP(https://github.com/leq6c/otomvp)のfrontendをReact Native Expoでネイティブアプリ化したものです。会話の録音とアップロード、AI分析、トランスクリプション機能を提供する会話分析プラットフォームのモバイル版として開発されます。
+A React Native Expo application that serves as the mobile version of the OTO conversation analysis platform. The app focuses on voice recording, AI-powered conversation analysis, and transcription features.
 
-### コンセプト
-- **"Voice Yields"** - 世界中の会話をデータに変換
-- 日常会話を構造化データに変換し、パーソナライズされたサービスを提供
-- スピーチAIの訓練データ不足を解決し、グローバルな会話フローをマッピング
+## Features
 
-## アプリケーションアーキテクチャ
+### Core Functionality
+- **Voice Recording**: Direct microphone recording with background support
+- **AI Analysis**: Conversation summaries, highlights, insights, and sentiment analysis
+- **Transcription**: Timestamped segments with search functionality
+- **File Management**: Upload progress tracking and processing status
+- **User Profiles**: Personal settings and point system integration
+- **Global Trends**: Conversation analytics and microtrend visualization
+- **Audio Clips**: Important conversation segment management with playback
 
-### プラットフォーム
-- **フレームワーク**: React Native with Expo
-- **言語**: TypeScript
-- **認証**: Privy Auth integration
-- **API**: 既存のOTO MVP Backend API を使用
-- **状態管理**: useState + jotai(global states) + AsyncStorage(persistent) + TanStack Query(api reponse cache)
-- **プロジェクト構造**: 標準的なExpo Router構造（top-level `app/` directory）
+### Authentication
+- Privy Auth integration with wallet connectivity
+- Solana blockchain integration for point systems
 
-### バックエンド連携
-- **API Base URL**: https://otomvp-api-78nm.onrender.com
-- **認証**: Privy access token + Bearer authentication
-- **データ形式**: JSON REST API
+## Tech Stack
 
-## 主要機能
+- **Framework**: React Native 0.79.5 with Expo ~53.0.17
+- **Language**: TypeScript with strict mode
+- **Navigation**: Expo Router with file-based routing
+- **Authentication**: Privy Auth with Solana wallet support
+- **State Management**: React hooks + Jotai + AsyncStorage + TanStack Query
+- **Audio**: expo-av for recording and playback
+- **Blockchain**: Solana Web3.js, Anchor framework, SPL Token support
 
-### 1. 認証システム
-- **Privy認証連携**
-  - ウォレット接続対応
+## Prerequisites
 
-### 2. アップロード機能(Nativeではファイル選択ではなくマイクからの直接録音のみ)
-- **音声ファイルアップロード**
-  - 録音機能（マイクからの直接録音/バックグラウンド録音対応）
-  - アップロード進捗表示
+- Node.js (version 16 or higher)
+- npm or yarn
+- Expo CLI (`npm install -g @expo/cli`)
+- Android Studio (for Android development)
 
-- **ファイル管理**
-  - アップロード履歴表示
-  - 処理ステータス（アップロード中、処理中、完了、エラー）
-  - ファイルメタデータ表示
+## Installation
 
-### 3. 分析・解析機能
-- **AI分析結果表示**
-  - 会話サマリー
-  - ハイライト（重要な瞬間の抽出）
-  - インサイト（提案、スコアリング）
-  - 感情分析
-  - 詳細分析データ
-
-- **トランスクリプト機能**
-  - 完全な文字起こし表示
-  - タイムスタンプ付きセグメント
-  - ハイライトとの連携
-  - 検索機能
-  - エクスポート機能
-
-### 4. プロフィール管理
-- **ユーザープロフィール**
-  - 基本情報（名前、年齢、国籍）
-  - 言語設定（第一言語、第二言語）
-  - 興味・関心分野
-  - 好みのトピック
-
-- **ポイントシステム**
-  - ポイント残高表示
-  - 取引履歴
-  - ポイント獲得方法の説明
-
-### 5. トレンド・アナリティクス
-- **グローバルトレンド**
-  - 会話トレンドの可視化
-  - マイクロトレンド分析
-  - 地域別データ
-  - 時系列分析
-
-### 6. クリップ機能
-- **会話クリップ管理**
-  - 重要な会話部分の切り出し
-  - クリップ一覧表示
-  - 音声再生機能
-  - コメント機能
-
-## API統合
-
-### 使用予定のAPI エンドポイント
-
-#### 認証
-- 既存のPrivy認証システムを活用
-- トークンリフレッシュ機能
-
-#### コア機能
-```
-POST /conversation/create     # 音声ファイルアップロード
-GET  /conversation/list       # 会話一覧取得
-GET  /conversation/{id}       # 個別会話取得
-GET  /analysis/{id}          # 分析結果取得
-GET  /transcript/{id}        # トランスクリプト取得
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd oto-app
 ```
 
-#### ユーザー管理
-```
-GET  /user/get               # プロフィール取得
-POST /user/update           # プロフィール更新
-GET  /point/get             # ポイント残高
+2. Install dependencies:
+```bash
+npm install
 ```
 
-#### トレンド・クリップ
-```
-GET  /trend/trends          # トレンド一覧
-GET  /clip/list            # クリップ一覧
-GET  /clip/{id}            # 個別クリップ
+3. Start the development server:
+```bash
+npm start
 ```
 
-## アプリの画面構成
-
-### メイン画面
-1. **ホーム**: 録音、アップロード
-2. **履歴**: 過去の会話とその処理状況 -> 詳細な分析結果とインサイト
-3. **トレンド**: グローバル分析データ
-4. **プロフィール**: ユーザープロフィールとポイント情報
-
-### 補助画面
-- **ヘルプ**: 使い方、FAQ
-
-## 技術スタック
-
-### フロントエンド
-```typescript
-React Native Expo
-
-// 主要ライブラリ
-- @expo/vector-icons      # アイコン
-- expo-av                # 音声録音・再生
+4. Run on Android:
+```bash
+npm run android
 ```
 
-### 認証・API
-```typescript
-// Privy認証
-@privy-io/expo           # Expo用Privy SDK
+## Development
 
-// HTTP クライアント
-fetch                    # API通信
-@tanstack/react-query    # データフェッチング・キャッシュ
+### Available Scripts
+
+- `npm start` - Start the Expo development server
+- `npm run android` - Run on Android device/emulator
+- `npm run lint` - Run ESLint for code quality
+- `npm run typecheck` - Run TypeScript type checking
+
+### Project Structure
+
+```
+app/                     # Expo Router (main application)
+├── _layout.tsx         # Root layout with Privy provider
+├── index.tsx           # Entry point
+├── (tabs)/             # Tab navigation group
+│   ├── _layout.tsx     # Tab layout
+│   ├── index.tsx       # Home tab (recording)
+│   ├── history.tsx     # Upload history
+│   ├── trends.tsx      # Global trends
+│   └── profile.tsx     # User profile
+└── conversation/       # Conversation details
+    └── [id]/
+        └── index.tsx   # Individual conversation view
+
+components/             # Reusable UI components
+├── analysis/          # Analysis display components
+├── clips/             # Audio clip components
+├── history/           # History list components
+├── profile/           # Profile management components
+├── recording/         # Recording interface components
+├── trends/            # Trend visualization components
+└── ui/                # Common UI components
+
+hooks/                 # Custom React hooks
+services/              # API integration
+types/                 # TypeScript type definitions
+constants/             # App constants
+blockchain/            # Solana blockchain integration
 ```
 
-### 状態管理・UI
-```typescript
-// 状態管理
-jotai                 # 軽量状態管理
+## Configuration
 
-// Style
-StyleSheet            # React Native built-in styling
-```
+The app uses Expo configuration with several key settings:
 
-## 開発フェーズ
+- **Bundle ID**: `com.yourcompany.otoapp`
+- **Scheme**: `otoapp`
+- **Permissions**: Audio recording, foreground services
+- **Privy Integration**: Configured for Solana wallet support
 
-### Phase 1: 基本機能 (MVP)
-- [ ] 認証システム実装
-- [ ] 基本ナビゲーション
-- [ ] 音声録音
-- [ ] アップロード
-- [ ] 会話一覧表示
+## API Integration
 
-### Phase 2: 分析機能
-- [ ] 分析結果表示
-- [ ] ハイライト機能
-- [ ] 基本プロフィール管理
-- [ ] トレンド表示
+The app integrates with the OTO backend API for:
+- User authentication and profile management
+- Audio file upload and processing
+- Conversation analysis and transcription
+- Trend data and analytics
+- Point system management
+
+---
+
+**Voice Yields** - Transforming global conversations into structured data for personalized services and AI training.
