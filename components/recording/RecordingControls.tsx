@@ -10,7 +10,12 @@ import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card, CardBody } from "@/components/ui/card";
 
-export default function RecordingControls() {
+export interface RecordingControlsProps {
+  isRecording: boolean;
+  setRecording: (recording: boolean) => void;
+}
+
+export default function RecordingControls({ isRecording, setRecording }: RecordingControlsProps) {
   const {
     recording,
     startRecording,
@@ -23,6 +28,7 @@ export default function RecordingControls() {
     isPlaying,
     playbackPosition,
     playbackDuration,
+    setLastRecordingUri,
   } = useAudioRecorder();
   const { user, getAccessToken } = usePrivy();
   const [uploading, setUploading] = useState(false);
@@ -90,17 +96,32 @@ export default function RecordingControls() {
       .padStart(2, "0")}`;
   };
 
+  const handleStartRecording = () => {
+    setRecording(true);
+    startRecording();
+  };
+
+  const handleStopRecording = () => {
+    setRecording(false);
+    stopRecording();
+  };
+
+  const handleDiscardRecording = () => {
+    setRecording(false);
+    setLastRecordingUri(null);
+  };
+
   return (
-    <Box className="items-center justify-start w-full">
+    <Box className="items-center justify-center w-full min-h-80 m-4">
       {/* Main Recording Button */}
-      <Box className="mb-0 mt-15">
+      <Box className="mb-0 mt-16">
         <TouchableOpacity
           className={`w-24 h-24 rounded-full justify-center items-center shadow-lg ${
             recording
               ? "bg-error-600 scale-95"
               : "bg-background-0 border-3 border-primary-600"
           }`}
-          onPress={recording ? stopRecording : startRecording}
+          onPress={recording ? handleStopRecording : handleStartRecording}
           activeOpacity={0.8}
         >
           <Ionicons
@@ -112,17 +133,11 @@ export default function RecordingControls() {
       </Box>
 
       {/* Status Section */}
-      <Box className="h-20 justify-center items-center w-full mb-5">
+      <Box className="h-10 mt-2 justify-center items-center w-full">
         {recording ? (
           <Box className="items-center">
-            <Box className="flex-row items-center mb-2">
-              <Box className="w-2 h-2 rounded-full bg-error-600 mr-2" />
-              <Text size="lg" weight="medium" className="text-typography-700">
-                Recording
-              </Text>
-            </Box>
             <Text 
-              size="3xl" 
+              size="2xl" 
               weight="light" 
               className="text-typography-900 font-mono tracking-wider"
             >
@@ -130,28 +145,28 @@ export default function RecordingControls() {
             </Text>
           </Box>
         ) : (
-          <Box className="h-20" />
+          <Box className="h-10" />
         )}
       </Box>
 
       {/* Action Buttons Section */}
-      <Box className="h-15 justify-center items-center w-full mb-4">
+      {lastRecordingUri && <Box className="h-10 justify-center items-center w-full mb-4">
         {!recording && lastRecordingUri ? (
           <Box className="flex-row justify-center gap-4 w-full max-w-xs">
             <Button
-              variant={isPlaying ? "solid" : "outline"}
+              variant="outline"
               size="md"
-              className={`flex-1 ${isPlaying ? "bg-error-600" : ""}`}
-              onPress={handlePlayLastRecording}
+              className="flex-1"
+              onPress={handleDiscardRecording}
             >
               <Ionicons
-                name={isPlaying ? "stop" : "play"}
+                name="trash"
                 size={20}
-                color={isPlaying ? "#ffffff" : "#4f46e5"}
+                color="#9ca3af"
                 style={{ marginRight: 6 }}
               />
-              <ButtonText variant={isPlaying ? "solid" : "outline"}>
-                {isPlaying ? "Stop" : "Play"}
+              <ButtonText variant="outline">
+                Discard
               </ButtonText>
             </Button>
 
@@ -168,17 +183,17 @@ export default function RecordingControls() {
                 style={{ marginRight: 6 }}
               />
               <ButtonText>
-                {uploading ? `${uploadProgress}%` : "Upload"}
+                {uploading ? `${uploadProgress}%` : "Contribute"}
               </ButtonText>
             </Button>
           </Box>
         ) : (
-          <Box className="h-12" />
+          <Box className="h-10" />
         )}
-      </Box>
+      </Box>}
 
       {/* Playback Time Section */}
-      <Box className="h-8 justify-center items-center w-full mb-4">
+      <Box className="h-8">
         {!recording && (isPlaying || playbackDuration > 0) ? (
           <Text 
             size="lg" 
@@ -188,12 +203,12 @@ export default function RecordingControls() {
             {formatDuration(playbackPosition)} / {formatDuration(playbackDuration)}
           </Text>
         ) : (
-          <Box className="h-6" />
+          <Box className="h-8" />
         )}
       </Box>
 
       {/* Status Messages Section */}
-      <Box className="h-8 justify-center items-center w-full mb-4">
+      {uploadStatus && <Box className="h-8 justify-center items-center w-full mb-4">
         {uploadStatus && (
           <Card variant="outline" size="sm" className="px-4 py-2">
             <CardBody>
@@ -210,39 +225,8 @@ export default function RecordingControls() {
             </CardBody>
           </Card>
         )}
-      </Box>
+      </Box>}
 
-      {/* Debug Information */}
-      <Card variant="ghost" size="sm" className="w-full max-w-xs bg-background-50">
-        <CardBody>
-          <Text size="sm" weight="semibold" className="text-typography-600 text-center mb-2">
-            🔧 Debug Info (Dev Only)
-          </Text>
-          <Text size="xs" className="text-typography-500 font-mono mb-1">
-            Recording URI: {lastRecordingUri ? "✓ Found" : "✗ None"}
-          </Text>
-          {lastRecordingUri && (
-            <Text size="xs" className="text-typography-500 font-mono mb-1" numberOfLines={2}>
-              Path: {lastRecordingUri}
-            </Text>
-          )}
-          {fileInfo && (
-            <>
-              <Text size="xs" className="text-typography-500 font-mono mb-1">
-                File exists: {fileInfo.exists ? "✓" : "✗"}
-              </Text>
-              <Text size="xs" className="text-typography-500 font-mono mb-1">
-                File size: {fileInfo.size} bytes
-              </Text>
-            </>
-          )}
-          {permissionStatus && (
-            <Text size="xs" className="text-typography-500 font-mono">
-              {permissionStatus}
-            </Text>
-          )}
-        </CardBody>
-      </Card>
     </Box>
   );
 }

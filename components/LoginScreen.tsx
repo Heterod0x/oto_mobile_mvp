@@ -1,6 +1,6 @@
 import { usePrivy } from "@privy-io/expo";
 import { useLogin } from "@privy-io/expo/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -11,7 +11,7 @@ export default function LoginScreen() {
   const { login } = useLogin();
   const [error, setError] = useState("");
   const { isReady } = usePrivy();
-  
+
   if (!isReady)
     return (
       <SafeAreaView className="flex-1">

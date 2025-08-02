@@ -5,9 +5,15 @@ import { Button, ButtonText } from '@/components/ui/button';
 import { Card, CardBody } from '@/components/ui/card';
 import { Ionicons } from '@expo/vector-icons';
 import { Alert } from 'react-native';
+import { router } from 'expo-router';
 
 export default function AccountActions() {
   const { logout } = usePrivy();
+
+  const redirectToHome = () => {
+    logout();
+    router.replace('/(tabs)');
+  }
 
   const handleLogout = () => {
     Alert.alert(
@@ -15,7 +21,7 @@ export default function AccountActions() {
       'Are you sure you want to logout?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', style: 'destructive', onPress: logout },
+        { text: 'Logout', style: 'destructive', onPress: redirectToHome },
       ]
     );
   };
