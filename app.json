@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "oto-app",
-    "slug": "oto-app",
+    "slug": "oto",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -24,7 +24,6 @@
         "RECORD_AUDIO",
         "FOREGROUND_SERVICE_MICROPHONE"
       ]
-
     },
     "web": {
       "bundler": "metro",
@@ -35,7 +34,7 @@
       "privyAppId": "cmcc0wydx0086js0l5e5gj35e",
       "privyClientId": "client-WY6N2jYhjSc3MBZXJinPQz9XWMUCQsJie5DXhXSBMz9WP",
       "eas": {
-        "projectId": "95038bb5-0d99-4299-9e31-d335b82fc561"
+        "projectId": "21777ad1-537c-4e54-b9ea-8254fbd03888"
       }
     },
     "plugins": [
@@ -67,5 +66,6 @@
     "experiments": {
       "typedRoutes": true
     }
-  }
+  },
+  "owner": "leq6c"
 }
