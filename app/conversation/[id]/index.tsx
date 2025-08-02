@@ -8,160 +8,250 @@ import useAnalysis from "@/hooks/useAnalysis";
 import useClips from "@/hooks/useClips";
 import useConversation from "@/hooks/useConversation";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ActivityIndicator, ScrollView, SafeAreaView } from "react-native";
+import { Box } from "@/components/ui/box";
+import { Text, Heading } from "@/components/ui/text";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Card, CardBody } from "@/components/ui/card";
+import { Header, HeaderAction } from "@/components/ui/header";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 
 export default function ConversationDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const conversationId = Array.isArray(id) ? id[0] : id;
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const { data, loading, error } = useClips(conversationId);
   const { data: analysis } = useAnalysis(conversationId);
   const { data: conversation } = useConversation(conversationId);
+  const [activeTab, setActiveTab] = useState<'overview' | 'clips' | 'insights'>('overview');
 
   const handleCommentaryToggle = (enabled: boolean) => {
-    // TODO: Implement commentary clip filtering
     console.log("Commentary toggle:", enabled);
   };
 
   const handleMusicToggle = (enabled: boolean) => {
-    // TODO: Implement music clip filtering
     console.log("Music toggle:", enabled);
   };
 
+  const TabButton = ({ 
+    tab, 
+    label, 
+    icon, 
+    isActive 
+  }: { 
+    tab: 'overview' | 'clips' | 'insights'; 
+    label: string; 
+    icon: string; 
+    isActive: boolean; 
+  }) => (
+    <Button
+      variant={isActive ? "solid" : "ghost"}
+      size="sm"
+      onPress={() => setActiveTab(tab)}
+      className={`flex-1 ${isActive ? '' : 'bg-transparent'}`}
+    >
+      <Box className="flex-row items-center">
+        <Ionicons 
+          name={icon as any} 
+          size={16} 
+          color={isActive ? "white" : "#4f46e5"} 
+          style={{ marginRight: 6 }}
+        />
+        <ButtonText variant={isActive ? "solid" : "ghost"} size="sm">
+          {label}
+        </ButtonText>
+      </Box>
+    </Button>
+  );
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1">
+        <Stack.Screen options={{ title: "Analysis", headerShown: false }} />
+        
+        {/* Hero Header - Same as main page */}
+        <Box className="bg-gradient-to-br from-primary-600 to-primary-800 px-5 py-6 pt-12">
+          <Box className="flex-row items-center justify-between mb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onPress={() => router.back()}
+              className="bg-white/0"
+            >
+              <Ionicons name="chevron-back" size={24} color="gray" />
+            </Button>
+            
+            <Box className="w-10 h-10" /> {/* Spacer for alignment */}
+          </Box>
+        </Box>
+
+        {/* Loading Content */}
+        <Box className="flex-1 bg-background-50 justify-center items-center px-8">
+          <Box className="items-center">
+            {/* Animated Loading Circle */}
+            <Box className="w-24 h-24 bg-white rounded-full items-center justify-center mb-8 shadow-lg">
+              <Box className="w-16 h-16 bg-primary-100 rounded-full items-center justify-center">
+                <ActivityIndicator size="large" color="#4f46e5" />
+              </Box>
+            </Box>
+            
+            {/* Progress Bar */}
+            <Box className="w-full max-w-sm mt-6">
+              <Box className="w-full h-2 bg-background-200 rounded-full overflow-hidden">
+                <Box className="w-2/3 h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full" />
+              </Box>
+              <Text size="xs" className="text-typography-500 text-center mt-2">
+                Processing... This may take a few moments
+              </Text>
+            </Box>
+          </Box>
+        </Box>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView className="flex-1">
+        <Header 
+          title="Analysis" 
+          showBackButton 
+          onBackPress={() => router.back()}
+        />
+        <Box className="flex-1 justify-center items-center px-8">
+          <Box className="items-center">
+            <Box className="w-20 h-20 bg-error-100 rounded-full items-center justify-center mb-6">
+              <Ionicons name="alert-circle" size={40} color="#dc2626" />
+            </Box>
+            <Heading size="lg" className="text-error-700 mb-2 text-center">
+              Analysis Failed
+            </Heading>
+            <Text size="md" className="text-typography-600 text-center mb-6">
+              {error}
+            </Text>
+            <Button onPress={() => router.back()}>
+              <ButtonText>Go Back</ButtonText>
+            </Button>
+          </Box>
+        </Box>
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView className="flex-1">
       <Stack.Screen options={{ title: "Analysis", headerShown: false }} />
+      
+      {/* Hero Header */}
+      <Box className="bg-gradient-to-br from-primary-600 to-primary-800 px-5 py-6 pt-12">
+        <Box className="flex-row items-center justify-between mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onPress={() => router.back()}
+            className="bg-white/0"
+          >
+            <Ionicons name="chevron-back" size={24} color="gray" />
+          </Button>
+        </Box>
 
-      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.backButtonText}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Analysis</Text>
-        <View style={styles.headerSpacer} />
-      </View>
+        <Box className="items-center">
+          <Box className="w-16 h-16 bg-black/0 rounded-full items-center justify-center mb-4">
+            <Ionicons name="analytics" size={32} color="gray" />
+          </Box>
+          <Heading size="2xl" className="text-black mb-2 text-center">
+            Conversation Analysis
+          </Heading>
+          <Text size="md" className="text-black/80 text-center">
+            AI-powered insights and performance metrics
+          </Text>
+        </Box>
+      </Box>
 
-      {loading && (
-        <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      )}
-
-      {error && (
-        <View style={styles.centerContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
-      )}
-
-      {data && (
-        <ScrollView style={styles.mainScroll}>
-          <ClipHeader
-            onCommentaryToggle={handleCommentaryToggle}
-            onMusicToggle={handleMusicToggle}
+      {/* Tab Navigation */}
+      <Box className="bg-background-0 px-5 py-4 border-b border-outline-100">
+        <Box className="flex-row bg-background-100 rounded-lg p-1">
+          <TabButton 
+            tab="overview" 
+            label="Overview" 
+            icon="pie-chart" 
+            isActive={activeTab === 'overview'} 
           />
-          <ClipList clips={data} />
-          <View style={styles.analysisContainer}>
-            <SummarySection summary={analysis?.summary.summary} />
-            <InsightSection
-              suggestions={analysis?.insights.suggestions}
-              scores={analysis?.insights}
-            />
-            <BreakdownSection
-              metadata={analysis?.breakdown.metadata}
-              sentiment={analysis?.breakdown.sentiment}
-              keywords={analysis?.breakdown.keywords}
-            />
-            <HighlightSection highlights={analysis?.highlights} />
-            {conversation?.points !== undefined && (
-              <View style={styles.pointsSection}>
-                <Text style={styles.pointsLabel}>Points Earned</Text>
-                <Text style={styles.pointsValue}>+ {conversation.points}</Text>
-              </View>
-            )}
-          </View>
-        </ScrollView>
-      )}
-    </View>
+          <TabButton 
+            tab="clips" 
+            label="Clips" 
+            icon="musical-notes" 
+            isActive={activeTab === 'clips'} 
+          />
+          <TabButton 
+            tab="insights" 
+            label="Insights" 
+            icon="bulb" 
+            isActive={activeTab === 'insights'} 
+          />
+        </Box>
+      </Box>
+
+      {/* Content */}
+      <ScrollView 
+        className="flex-1 bg-background-50"
+        showsVerticalScrollIndicator={false}
+      >
+        <Box className="px-5 py-6">
+          {activeTab === 'overview' && (
+            <Box className="space-y-6">
+              {/* Points Earned - Hero Card */}
+              {conversation?.points !== undefined && (
+                <Card variant="elevated" className="bg-gradient-to-r from-success-500 to-success-600 mb-4">
+                  <CardBody>
+                    <Box className="flex-row items-center justify-between">
+                      <Box className="flex-1">
+                        <Text size="sm" className="text-black/80 mb-1">
+                          Points Earned
+                        </Text>
+                        <Heading size="3xl" className="text-black">
+                          +{conversation.points}
+                        </Heading>
+                      </Box>
+                      <Box className="w-16 h-16 bg-black/0 rounded-full items-center justify-center">
+                        <Ionicons name="trophy" size={32} color="gray" />
+                      </Box>
+                    </Box>
+                  </CardBody>
+                </Card>
+              )}
+
+              <SummarySection summary={analysis?.summary.summary} />
+              <InsightSection
+                suggestions={analysis?.insights.suggestions}
+                scores={analysis?.insights}
+              />
+            </Box>
+          )}
+
+          {activeTab === 'clips' && (
+            <Box>
+              <ClipHeader
+                onCommentaryToggle={handleCommentaryToggle}
+                onMusicToggle={handleMusicToggle}
+              />
+              <ClipList clips={data} />
+            </Box>
+          )}
+
+          {activeTab === 'insights' && (
+            <Box className="space-y-6">
+              <BreakdownSection
+                metadata={analysis?.breakdown.metadata}
+                sentiment={analysis?.breakdown.sentiment}
+                keywords={analysis?.breakdown.keywords}
+              />
+              <HighlightSection highlights={analysis?.highlights} />
+            </Box>
+          )}
+        </Box>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    backgroundColor: "#ffffff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e9ecef",
-  },
-  backButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: "#007AFF",
-    fontWeight: "500",
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333333",
-  },
-  headerSpacer: {
-    width: 60,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    fontSize: 16,
-    color: "#dc3545",
-    textAlign: "center",
-  },
-  mainScroll: {
-    flex: 1,
-  },
-  analysisContainer: {
-    paddingTop: 8,
-  },
-  pointsSection: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#fff",
-    marginBottom: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#e9ecef",
-  },
-  pointsLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 4,
-  },
-  pointsValue: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-  },
-});

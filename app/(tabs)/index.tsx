@@ -1,57 +1,33 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import RecordingControls from '@/components/recording/RecordingControls';
+import { Box } from '@/components/ui/box';
+import { Text, Heading } from '@/components/ui/text';
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1">
       <ScrollView 
-        contentContainerStyle={styles.contentContainer}
+        className="flex-1"
+        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerSection}>
-          <Text style={styles.headerTitle}>OTO</Text>
-          <Text style={styles.headerSubtitle}>Record, Analyze & Share Conversations</Text>
-        </View>
-        
-        <View style={styles.recordingSection}>
-          <RecordingControls />
-        </View>
+        <Box className="flex-1 px-5 py-8 pt-24 pb-12 bg-gradient-to-b from-background-0 to-background-50">
+          {/* Header Section */}
+          <Box className="items-center mb-12 mt-10">
+            <Heading size="6xl" weight="light" className="text-primary-900 mb-2 tracking-tight">
+              oto
+            </Heading>
+            <Text size="lg" className="text-typography-600 text-center">
+              Record, Analyze & Share Conversations
+            </Text>
+          </Box>
+          
+          {/* Recording Section */}
+          <Box className="flex-1 justify-center items-center">
+            <RecordingControls />
+          </Box>
+        </Box>
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f9fa',
-  },
-  contentContainer: {
-    flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 32,
-    paddingBottom: 50,
-  },
-  headerSection: {
-    alignItems: 'center',
-    marginBottom: 48,
-    marginTop: 40,
-  },
-  headerTitle: {
-    fontSize: 36,
-    fontWeight: '300',
-    letterSpacing: -1,
-    color: '#1a1a1a',
-    marginBottom: 8,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: '#6b7280',
-    fontWeight: '400',
-  },
-  recordingSection: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
