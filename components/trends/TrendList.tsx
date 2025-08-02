@@ -35,15 +35,16 @@ export default function TrendList({ trends, title }: Props) {
 const styles = StyleSheet.create({
   listContainer: {
     paddingVertical: 12,
-    paddingHorizontal: 16,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 8,
+    paddingHorizontal: 16,
   },
   contentContainer: {
-    // paddingHorizontal: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
   },
   emptyContainer: {
     padding: 16,
