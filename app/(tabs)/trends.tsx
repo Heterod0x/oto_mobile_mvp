@@ -58,6 +58,7 @@ export default function TrendsScreen() {
           
           <TrendList trends={trends} title="Global Conversation Trends" />
           <MicrotrendList microtrends={microtrends} />
+          <Box className="h-20"/>
         </Box>
       </ScrollView>
     </SafeAreaView>

@@ -382,6 +382,7 @@ export default function VAppsScreen() {
             </CardBody>
           </Card>
         </Box>
+        <Box className="h-20"/>
       </ScrollView>
     </SafeAreaView>
   );

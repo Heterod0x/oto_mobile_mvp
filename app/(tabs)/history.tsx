@@ -77,6 +77,7 @@ export default function HistoryScreen() {
             paddingBottom: 20
           }}
         />
+        <Box className="h-20"/>
       </Box>
     </SafeAreaView>
   );

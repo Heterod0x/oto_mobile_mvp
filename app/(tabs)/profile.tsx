@@ -72,6 +72,7 @@ export default function ProfileScreen() {
             />
             <AccountActions />
           </Box>
+          <Box className="h-20"/>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
