@@ -51,12 +51,7 @@ cd oto-app
 npm install
 ```
 
-3. Start the development server:
-```bash
-npm start
-```
-
-4. Run on Android:
+3. Run on Android:
 ```bash
 npm run android
 ```
@@ -65,7 +60,6 @@ npm run android
 
 ### Available Scripts
 
-- `npm start` - Start the Expo development server
 - `npm run android` - Run on Android device/emulator
 - `npm run lint` - Run ESLint for code quality
 - `npm run typecheck` - Run TypeScript type checking
