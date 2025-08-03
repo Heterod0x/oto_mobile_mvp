@@ -27,7 +27,6 @@ A React Native Expo application that serves as the mobile version of the OTO con
 - **Language**: TypeScript with strict mode
 - **Navigation**: Expo Router with file-based routing
 - **Authentication**: Privy Auth with Solana wallet support
-- **State Management**: React hooks + Jotai + AsyncStorage + TanStack Query
 - **Audio**: expo-av for recording and playback
 - **Blockchain**: Solana Web3.js, Anchor framework, SPL Token support
 
