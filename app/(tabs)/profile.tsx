@@ -1,4 +1,5 @@
 import { ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
+import { useCallback } from 'react';
 import useUserProfile from '@/hooks/useUserProfile';
 import usePointBalance from '@/hooks/usePointBalance';
 import usePointClaim from '@/hooks/usePointClaim';
@@ -14,6 +15,10 @@ export default function ProfileScreen() {
   const { data: profile, loading: loadingProfile, save } = useUserProfile();
   const { data: balance } = usePointBalance();
   const { data: claimable, claim, claiming, error: claimError } = usePointClaim();
+
+  const handleSave = useCallback(async (data: any) => {
+    await save(data);
+  }, [save]);
 
   if (!user) return null;
 
@@ -37,10 +42,6 @@ export default function ProfileScreen() {
       </SafeAreaView>
     );
   }
-
-  const handleSave = async (data: any) => {
-    await save(data);
-  };
 
   return (
     <SafeAreaView className="flex-1">

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/ui/text';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,7 @@ interface Props {
   placeholder?: string;
 }
 
-export default function TagInput({ label, value, onChange, placeholder = "tag1, tag2" }: Props) {
+const TagInput = memo(function TagInput({ label, value, onChange, placeholder = "tag1, tag2" }: Props) {
   const tags = value ? value.split(',').map(tag => tag.trim()).filter(Boolean) : [];
   
   return (
@@ -42,4 +43,6 @@ export default function TagInput({ label, value, onChange, placeholder = "tag1, 
       )}
     </Box>
   );
-}
+});
+
+export default TagInput;
