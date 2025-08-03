@@ -303,3 +303,46 @@ export async function claimPoints(
   }
   return (await res.json()) as ClaimResponse;
 }
+
+export interface WalletAuthResponse {
+  challenge_id: string;
+  nonce: string;
+  expires_at: string;
+}
+
+export async function startWalletAuth(): Promise<WalletAuthResponse> {
+  const res = await fetch(`${API_BASE_URL}/auth/wallet/start`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as WalletAuthResponse;
+}
+
+export interface ResponseVerifyWalletAuth {
+  token: string;
+  success: boolean;
+}
+
+export async function verifyWalletAuth(
+  user_id: string,
+  challenge_id: string,
+  signature: string,
+  signed_message: string
+): Promise<ResponseVerifyWalletAuth> {
+  const res = await fetch(`${API_BASE_URL}/auth/wallet/verify`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user_id, challenge_id, signature, signed_message }),
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return (await res.json()) as ResponseVerifyWalletAuth;
+}

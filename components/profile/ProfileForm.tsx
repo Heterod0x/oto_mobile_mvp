@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { UserProfileResponse } from '@/types/user';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/ui/text';
@@ -15,7 +15,7 @@ interface Props {
   loading?: boolean;
 }
 
-export default function ProfileForm({ profile, onSave, loading }: Props) {
+const ProfileForm = memo(function ProfileForm({ profile, onSave, loading }: Props) {
   const [name, setName] = useState(profile?.name ?? '');
   const [age, setAge] = useState(profile?.age?.toString() ?? '');
   const [nationality, setNationality] = useState(profile?.nationality ?? '');
@@ -25,14 +25,16 @@ export default function ProfileForm({ profile, onSave, loading }: Props) {
   const [topics, setTopics] = useState(profile?.preferred_topics ?? '');
 
   useEffect(() => {
-    setName(profile?.name ?? '');
-    setAge(profile?.age !== null && profile?.age !== undefined ? String(profile.age) : '');
-    setNationality(profile?.nationality ?? '');
-    setFirstLang(profile?.first_language ?? '');
-    setSecondLangs(profile?.second_languages ?? '');
-    setInterests(profile?.interests ?? '');
-    setTopics(profile?.preferred_topics ?? '');
-  }, [profile]);
+    if (profile) {
+      setName(profile.name ?? '');
+      setAge(profile.age !== null && profile.age !== undefined ? String(profile.age) : '');
+      setNationality(profile.nationality ?? '');
+      setFirstLang(profile.first_language ?? '');
+      setSecondLangs(profile.second_languages ?? '');
+      setInterests(profile.interests ?? '');
+      setTopics(profile.preferred_topics ?? '');
+    }
+  }, [profile?.id]); // Only update when profile ID changes, not on every profile object change
 
   const initials = name
     ? name
@@ -42,7 +44,7 @@ export default function ProfileForm({ profile, onSave, loading }: Props) {
         .toUpperCase()
     : 'U';
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     onSave({
       id: profile?.id ?? '',
       name,
@@ -53,16 +55,16 @@ export default function ProfileForm({ profile, onSave, loading }: Props) {
       interests: interests || null,
       preferred_topics: topics || null,
     });
-  };
+  }, [profile?.id, name, age, nationality, firstLang, secondLangs, interests, topics, onSave]);
 
-  const FormField = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  const FormField = useCallback(({ label, children }: { label: string; children: React.ReactNode }) => (
     <Box className="mb-4">
       <Text size="sm" weight="medium" className="text-typography-700 mb-2">
         {label}
       </Text>
       {children}
     </Box>
-  );
+  ), []);
 
   return (
     <Card variant="elevated" className="mx-0 mb-6">
@@ -167,4 +169,6 @@ export default function ProfileForm({ profile, onSave, loading }: Props) {
       </CardBody>
     </Card>
   );
-}
+});
+
+export default ProfileForm;

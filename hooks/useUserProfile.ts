@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { usePrivy } from '@privy-io/expo';
-import { fetchUserProfile, updateUserProfile } from '@/services/api';
-import { UserProfileResponse, UserUpdateRequest } from '@/types/user';
+import { useEffect, useState } from "react";
+import { fetchUserProfile, updateUserProfile } from "@/services/api";
+import { UserProfileResponse, UserUpdateRequest } from "@/types/user";
+import { useAuth } from "@/lib/oto-auth";
 
 export default function useUserProfile() {
-  const { user, getAccessToken } = usePrivy();
+  const { user, getAccessToken } = useAuth();
   const [data, setData] = useState<UserProfileResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export default function useUserProfile() {
     setLoading(true);
     setError(null);
     try {
-      const token = (await getAccessToken()) || '';
+      const token = (await getAccessToken()) || "";
       const res = await fetchUserProfile(user.id, token);
       setData(res);
     } catch (err) {
@@ -34,7 +34,7 @@ export default function useUserProfile() {
     setLoading(true);
     setError(null);
     try {
-      const token = (await getAccessToken()) || '';
+      const token = (await getAccessToken()) || "";
       await updateUserProfile(update, user.id, token);
       const refreshed = await fetchUserProfile(user.id, token);
       setData(refreshed);

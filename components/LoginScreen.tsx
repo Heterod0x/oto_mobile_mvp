@@ -1,4 +1,3 @@
-import { usePrivy } from "@privy-io/expo";
 import { useLogin } from "@privy-io/expo/ui";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
@@ -6,11 +5,12 @@ import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Text, Heading } from "@/components/ui/text";
 import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "@/lib/oto-auth";
 
 export default function LoginScreen() {
   const { login } = useLogin();
   const [error, setError] = useState("");
-  const { isReady } = usePrivy();
+  const { isReady } = useAuth();
 
   if (!isReady)
     return (

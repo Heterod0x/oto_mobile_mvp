@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { usePrivy } from '@privy-io/expo';
-import { fetchTranscript } from '@/services/api';
-import { TranscriptResponse } from '@/types/analysis';
+import { useEffect, useState } from "react";
+import { fetchTranscript } from "@/services/api";
+import { TranscriptResponse } from "@/types/analysis";
+import { useAuth } from "@/lib/oto-auth";
 
 export default function useTranscript(conversationId: string) {
-  const { user, getAccessToken } = usePrivy();
+  const { user, getAccessToken } = useAuth();
   const [data, setData] = useState<TranscriptResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +17,7 @@ export default function useTranscript(conversationId: string) {
       setLoading(true);
       setError(null);
       try {
-        const token = (await getAccessToken()) || '';
+        const token = (await getAccessToken()) || "";
         const res = await fetchTranscript(conversationId, user.id, token);
         if (!canceled) setData(res);
       } catch (err) {

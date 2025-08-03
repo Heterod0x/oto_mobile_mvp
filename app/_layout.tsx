@@ -11,6 +11,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "@/global.css";
+import { AuthProvider } from "@/lib/oto-auth";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -31,8 +32,10 @@ export default function RootLayout() {
           },
         } as any}
       >
-        <Stack screenOptions={{ headerShown: false }} />
-        <PrivyElements />
+        <AuthProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+            <PrivyElements />
+        </AuthProvider>
       </PrivyProvider>
     </GluestackUIProvider>
   );

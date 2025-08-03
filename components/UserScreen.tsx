@@ -1,8 +1,8 @@
 import { View, Button, Text } from 'react-native';
-import { usePrivy } from '@privy-io/expo';
+import { useAuth } from '@/lib/oto-auth';
 
 export default function UserScreen() {
-  const { user, logout } = usePrivy();
+  const { user, logout } = useAuth();
 
   if (!user) return null;
 

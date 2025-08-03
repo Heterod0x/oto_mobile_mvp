@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { usePrivy } from "@privy-io/expo";
 import { fetchConversations } from "@/services/api";
 import { ConversationDTO } from "@/types/conversation";
+import { useAuth } from "@/lib/oto-auth";
 
 export default function useConversations() {
-  const { user, getAccessToken } = usePrivy();
+  const { user, getAccessToken } = useAuth();
   const [data, setData] = useState<ConversationDTO[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
