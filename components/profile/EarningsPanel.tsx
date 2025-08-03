@@ -1,9 +1,13 @@
+import React, { useState, useEffect } from 'react';
 import { PointBalanceResponse, ClaimableAmountResponse } from '@/types/user';
 import { Box } from '@/components/ui/box';
 import { Text, Heading } from '@/components/ui/text';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Card, CardBody } from '@/components/ui/card';
 import { Ionicons } from '@expo/vector-icons';
+import TransactionConfirmationModal from './TransactionConfirmationModal';
+import TransactionSuccessModal from './TransactionSuccessModal';
+import { ActivityIndicator } from 'react-native';
 
 interface Props {
   balance: PointBalanceResponse | null;
@@ -14,6 +18,40 @@ interface Props {
 }
 
 export default function EarningsPanel({ balance, claimable, onClaim, claiming, error }: Props) {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [lastClaimedAmount, setLastClaimedAmount] = useState<string>('0');
+  const [wasClaiming, setWasClaiming] = useState(false);
+
+  // Track claiming state changes to show success modal
+  useEffect(() => {
+    if (wasClaiming && !claiming && !error) {
+      // Claim was successful
+      setShowSuccessModal(true);
+    }
+    setWasClaiming(claiming || false);
+  }, [claiming, error, claimable?.display_amount, wasClaiming]);
+
+  const handleClaimPress = () => {
+    setShowConfirmModal(true);
+    setLastClaimedAmount(claimable?.display_amount || '0');
+  };
+
+  const handleConfirmClaim = () => {
+    setShowConfirmModal(false);
+    if (onClaim) {
+      onClaim();
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+  };
+
   return (
     <Card variant="elevated" className="mx-0 mb-6">
       <CardBody>
@@ -57,15 +95,16 @@ export default function EarningsPanel({ balance, claimable, onClaim, claiming, e
                     <Button
                       size="md"
                       className="bg-success-600 w-full"
-                      onPress={onClaim}
+                      onPress={handleClaimPress}
                       disabled={claiming}
                     >
-                      <Ionicons 
+                      {!claiming && <Ionicons 
                         name="download" 
                         size={18} 
                         color="white" 
-                        style={{ marginRight: 8 }} 
-                      />
+                        className="mr-2"
+                      />}
+                      {claiming && <ActivityIndicator className="mr-2" size="small" color="white" />}
                       <ButtonText>
                         {claiming ? 'Claiming...' : 'Claim Points'}
                       </ButtonText>
@@ -109,6 +148,23 @@ export default function EarningsPanel({ balance, claimable, onClaim, claiming, e
           </Box>
         </Box>
       </CardBody>
+
+      {/* Transaction Confirmation Modal */}
+      <TransactionConfirmationModal
+        isOpen={showConfirmModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmClaim}
+        amount={claimable?.display_amount || '0'}
+        isLoading={claiming}
+        error={error}
+      />
+
+      {/* Transaction Success Modal */}
+      <TransactionSuccessModal
+        isOpen={showSuccessModal}
+        onClose={handleCloseSuccessModal}
+        amount={lastClaimedAmount}
+      />
     </Card>
   );
 }
