@@ -1,4 +1,3 @@
-import { usePrivy } from '@privy-io/expo';
 import { Box } from '@/components/ui/box';
 import { Text, Heading } from '@/components/ui/text';
 import { Button, ButtonText } from '@/components/ui/button';
@@ -6,9 +5,10 @@ import { Card, CardBody } from '@/components/ui/card';
 import { Ionicons } from '@expo/vector-icons';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
+import { useAuth } from '@/lib/oto-auth';
 
 export default function AccountActions() {
-  const { logout } = usePrivy();
+  const { logout } = useAuth();
 
   const redirectToHome = () => {
     logout();

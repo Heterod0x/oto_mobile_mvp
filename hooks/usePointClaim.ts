@@ -1,11 +1,11 @@
 import { useOtoProgram } from "@/blockchain/oto/useOtoProgram";
 import { claimPoints, fetchClaimableAmount } from "@/services/api";
 import { ClaimableAmountResponse, ClaimResponse } from "@/types/user";
-import { usePrivy } from "@privy-io/expo";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/oto-auth";
 
 export default function usePointClaim() {
-  const { user, getAccessToken } = usePrivy();
+  const { user, getAccessToken } = useAuth();
   const { buildClaimTx, signTransaction } = useOtoProgram();
   const [data, setData] = useState<ClaimableAmountResponse | null>(null);
   const [loading, setLoading] = useState(false);

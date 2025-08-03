@@ -6,16 +6,24 @@ import { Card, CardBody } from '@/components/ui/card';
 import { Ionicons } from '@expo/vector-icons';
 import usePointBalance from '@/hooks/usePointBalance';
 import { useState } from 'react';
-import { usePrivy } from '@privy-io/expo';
 import LoginScreen from '@/components/LoginScreen';
 import { useLogin } from '@privy-io/expo/ui';
 import { Button, ButtonText } from "@/components/ui/button";
+import { useAuth } from '@/lib/oto-auth';
 
 export default function HomeScreen() {
   const { data: balance } = usePointBalance();
   const [isRecording, setIsRecording] = useState(false);
-  const { user, isReady } = usePrivy();
+  const { user, isReady, loginWithSolana } = useAuth();
   const { login } = useLogin();
+
+  const handleConnectWallet = async () => {
+    try{
+      await loginWithSolana();
+    }catch(error){
+      console.error(error);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -53,8 +61,12 @@ export default function HomeScreen() {
             <RecordingControls isRecording={isRecording} setRecording={setIsRecording} />
           </Box>}
           {!user && isReady && <Box className="justify-center items-center h-64">
-            <Button onPress={() => login({ loginMethods: ["email"] })}>
-              <ButtonText>Login with Email</ButtonText>
+            <Text className="text-typography-900 mb-4 text-md">Login with:</Text>
+            <Button onPress={() => login({ loginMethods: ["email"] })} className="w-32 bg-transparent border-primary-600 border-[1px]">
+              <ButtonText className="text-primary-600 text-md">Email</ButtonText>
+            </Button>
+            <Button onPress={handleConnectWallet} className="mt-4 w-32 bg-transparent border-primary-600 border-[1px]">
+              <ButtonText className="text-md text-primary-600">Solana</ButtonText>
             </Button>
           </Box>}
 

@@ -1,7 +1,7 @@
 import useAudioRecorder from "@/hooks/useAudioRecorder";
 import { uploadAudio } from "@/services/api";
 import { Ionicons } from "@expo/vector-icons";
-import { usePrivy } from "@privy-io/expo";
+import { useAuth } from "@/lib/oto-auth";
 import * as FileSystem from "expo-file-system";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
@@ -30,7 +30,7 @@ export default function RecordingControls({ isRecording, setRecording }: Recordi
     playbackDuration,
     setLastRecordingUri,
   } = useAudioRecorder();
-  const { user, getAccessToken } = usePrivy();
+  const { user, getAccessToken } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);

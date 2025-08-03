@@ -1,7 +1,7 @@
 import { fetchClipAudioUrl } from "@/services/api";
 import { ClipDTO } from "@/types/clip";
 import { Ionicons } from "@expo/vector-icons";
-import { usePrivy } from "@privy-io/expo";
+import { useAuth } from "@/lib/oto-auth";
 import { Audio } from "expo-av";
 import { useRef, useState } from "react";
 import {
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function ClipCard({ clip, onPress }: Props) {
-  const { user, getAccessToken } = usePrivy();
+  const { user, getAccessToken } = useAuth();
   const soundRef = useRef<Audio.Sound | null>(null);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
