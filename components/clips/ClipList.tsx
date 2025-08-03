@@ -18,7 +18,6 @@ export default function ClipList({ clips }: Props) {
   return (
     <View style={styles.listContainer}>
       <ScrollView
-        horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
       >

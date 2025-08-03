@@ -2,7 +2,9 @@ import MicrotrendList from "@/components/trends/MicrotrendList";
 import TrendList from "@/components/trends/TrendList";
 import useMicrotrends from "@/hooks/useMicrotrends";
 import useTrends from "@/hooks/useTrends";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, SafeAreaView } from "react-native";
+import { Box } from "@/components/ui/box";
+import { Text, Heading } from "@/components/ui/text";
 
 export default function TrendsScreen() {
   const {
@@ -21,24 +23,44 @@ export default function TrendsScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      <SafeAreaView className="flex-1">
+        <Box className="flex-1 justify-center items-center bg-background-0">
+          <ActivityIndicator size="large" color="#4f46e5" />
+          <Text size="lg" className="text-typography-600 mt-4">Loading trends...</Text>
+        </Box>
+      </SafeAreaView>
     );
   }
 
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ marginBottom: 8 }}>Failed to load trends</Text>
-      </View>
+      <SafeAreaView className="flex-1">
+        <Box className="flex-1 justify-center items-center bg-background-0">
+          <Text size="lg" className="text-error-600">Failed to load trends</Text>
+        </Box>
+      </SafeAreaView>
     );
   }
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <TrendList trends={trends} title="Global Conversation Trends" />
-      <MicrotrendList microtrends={microtrends} />
-    </ScrollView>
+    <SafeAreaView className="flex-1">
+      <ScrollView 
+        className="flex-1 bg-background-0"
+        showsVerticalScrollIndicator={false}
+      >
+        <Box className="px-5 py-6 pt-24">
+          <Box className="mb-8">
+            <Heading size="2xl" className="text-typography-900 mb-2">Trends</Heading>
+            <Text size="md" className="text-typography-600">
+              Discover what&apos;s trending in conversations
+            </Text>
+          </Box>
+          
+          <TrendList trends={trends} title="Global Conversation Trends" />
+          <MicrotrendList microtrends={microtrends} />
+          <Box className="h-20"/>
+        </Box>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
 import { UserProfileResponse } from '@/types/user';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Card, CardBody } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import Avatar from './Avatar';
-import LabeledInput from './LabeledInput';
 import TagInput from './TagInput';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   profile: UserProfileResponse | null;
@@ -51,31 +55,116 @@ export default function ProfileForm({ profile, onSave, loading }: Props) {
     });
   };
 
+  const FormField = ({ label, children }: { label: string; children: React.ReactNode }) => (
+    <Box className="mb-4">
+      <Text size="sm" weight="medium" className="text-typography-700 mb-2">
+        {label}
+      </Text>
+      {children}
+    </Box>
+  );
+
   return (
-    <View style={styles.container}>
-      <Avatar initials={initials} />
-      <LabeledInput label="Name" value={name} onChange={setName} />
-      <LabeledInput label="Age" value={age} onChange={setAge} keyboardType="numeric" />
-      <LabeledInput label="Nationality" value={nationality} onChange={setNationality} />
-      <LabeledInput label="First Language" value={firstLang} onChange={setFirstLang} />
-      <TagInput label="Second Languages" value={secondLangs} onChange={setSecondLangs} />
-      <TagInput label="Interests" value={interests} onChange={setInterests} />
-      <TagInput label="Preferred Topics" value={topics} onChange={setTopics} />
-      <Button title="Save" onPress={handleSave} disabled={loading} />
-    </View>
+    <Card variant="elevated" className="mx-0 mb-6">
+      <CardBody>
+        {/* Avatar Section */}
+        <Box className="items-center mb-6">
+          <Avatar initials={initials} />
+          <Text size="lg" weight="medium" className="text-typography-900 mt-3">
+            Personal Information
+          </Text>
+          <Text size="sm" className="text-typography-600">
+            Update your profile details
+          </Text>
+        </Box>
+
+        {/* Form Fields */}
+        <Box className="space-y-4">
+          <FormField label="Full Name">
+            <Input
+              value={name}
+              onChangeText={setName}
+              placeholder="Enter your full name"
+              className="focus:border-primary-600"
+            />
+          </FormField>
+
+          <FormField label="Age">
+            <Input
+              value={age}
+              onChangeText={setAge}
+              placeholder="Enter your age"
+              keyboardType="numeric"
+              className="focus:border-primary-600"
+            />
+          </FormField>
+
+          <FormField label="Nationality">
+            <Input
+              value={nationality}
+              onChangeText={setNationality}
+              placeholder="Enter your nationality"
+              className="focus:border-primary-600"
+            />
+          </FormField>
+
+          <FormField label="First Language">
+            <Input
+              value={firstLang}
+              onChangeText={setFirstLang}
+              placeholder="Enter your first language"
+              className="focus:border-primary-600"
+            />
+          </FormField>
+
+          <FormField label="Second Languages">
+            <TagInput 
+              label="" 
+              value={secondLangs} 
+              onChange={setSecondLangs}
+              placeholder="Add languages (comma separated)"
+            />
+          </FormField>
+
+          <FormField label="Interests">
+            <TagInput 
+              label="" 
+              value={interests} 
+              onChange={setInterests}
+              placeholder="Add your interests (comma separated)"
+            />
+          </FormField>
+
+          <FormField label="Preferred Topics">
+            <TagInput 
+              label="" 
+              value={topics} 
+              onChange={setTopics}
+              placeholder="Add preferred topics (comma separated)"
+            />
+          </FormField>
+        </Box>
+
+        {/* Save Button */}
+        <Box className="mt-6">
+          <Button
+            size="lg"
+            onPress={handleSave}
+            disabled={loading}
+            className="w-full"
+          >
+            <Ionicons 
+              name="save" 
+              size={20} 
+              color="white" 
+              style={{ marginRight: 8 }} 
+            />
+            <ButtonText size="lg">
+              {loading ? 'Saving...' : 'Save Profile'}
+            </ButtonText>
+          </Button>
+        </Box>
+      </CardBody>
+    </Card>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    margin: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
-  },
-});

@@ -4,9 +4,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { usePrivy } from "@privy-io/expo";
 import * as FileSystem from "expo-file-system";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { Box } from "@/components/ui/box";
+import { Text } from "@/components/ui/text";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Card, CardBody } from "@/components/ui/card";
 
-export default function RecordingControls() {
+export interface RecordingControlsProps {
+  isRecording: boolean;
+  setRecording: (recording: boolean) => void;
+}
+
+export default function RecordingControls({ isRecording, setRecording }: RecordingControlsProps) {
   const {
     recording,
     startRecording,
@@ -19,6 +28,7 @@ export default function RecordingControls() {
     isPlaying,
     playbackPosition,
     playbackDuration,
+    setLastRecordingUri,
   } = useAudioRecorder();
   const { user, getAccessToken } = usePrivy();
   const [uploading, setUploading] = useState(false);
@@ -45,7 +55,6 @@ export default function RecordingControls() {
     }
   };
 
-  // ファイル情報をチェックする関数
   const checkFileInfo = async (uri: string) => {
     try {
       const info = await FileSystem.getInfoAsync(uri);
@@ -63,13 +72,11 @@ export default function RecordingControls() {
   const handlePlayLastRecording = async () => {
     if (!lastRecordingUri) return;
 
-    // 再生中なら停止
     if (isPlaying) {
       await stopCurrentPlayback();
       return;
     }
 
-    // まずファイル情報をチェック
     const info = await checkFileInfo(lastRecordingUri);
     if (!info?.exists || info.size === 0) return;
 
@@ -89,18 +96,32 @@ export default function RecordingControls() {
       .padStart(2, "0")}`;
   };
 
+  const handleStartRecording = () => {
+    setRecording(true);
+    startRecording();
+  };
+
+  const handleStopRecording = () => {
+    setRecording(false);
+    stopRecording();
+  };
+
+  const handleDiscardRecording = () => {
+    setRecording(false);
+    setLastRecordingUri(null);
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Main Recording Button - Fixed Position */}
-      <View style={styles.recordingButtonContainer}>
+    <Box className="items-center justify-center w-full min-h-80 m-4">
+      {/* Main Recording Button */}
+      <Box className="mb-0 mt-16">
         <TouchableOpacity
-          style={[
-            styles.recordingButton,
+          className={`w-24 h-24 rounded-full justify-center items-center shadow-lg ${
             recording
-              ? styles.recordingButtonActive
-              : styles.recordingButtonInactive,
-          ]}
-          onPress={recording ? stopRecording : startRecording}
+              ? "bg-error-600 scale-95"
+              : "bg-background-0 border-3 border-primary-600"
+          }`}
+          onPress={recording ? handleStopRecording : handleStartRecording}
           activeOpacity={0.8}
         >
           <Ionicons
@@ -109,50 +130,49 @@ export default function RecordingControls() {
             color={recording ? "#ffffff" : "#4f46e5"}
           />
         </TouchableOpacity>
-      </View>
+      </Box>
 
-      {/* Status Section - Fixed Height */}
-      <View style={styles.statusSection}>
+      {/* Status Section */}
+      <Box className="h-10 mt-2 justify-center items-center w-full">
         {recording ? (
-          <View style={styles.recordingStatusContainer}>
-            <View style={styles.recordingIndicator}>
-              <View style={styles.recordingDot} />
-              <Text style={styles.recordingText}>Recording</Text>
-            </View>
-            <Text style={styles.durationText}>{formatDuration(duration)}</Text>
-          </View>
+          <Box className="items-center">
+            <Text 
+              size="2xl" 
+              weight="light" 
+              className="text-typography-900 font-mono tracking-wider"
+            >
+              {formatDuration(duration)}
+            </Text>
+          </Box>
         ) : (
-          <View style={styles.placeholderContainer} />
+          <Box className="h-10" />
         )}
-      </View>
+      </Box>
 
-      {/* Action Buttons Section - Fixed Height */}
-      <View style={styles.actionSection}>
+      {/* Action Buttons Section */}
+      {lastRecordingUri && <Box className="h-10 justify-center items-center w-full mb-4">
         {!recording && lastRecordingUri ? (
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                isPlaying ? styles.stopButton : styles.playButton,
-              ]}
-              onPress={handlePlayLastRecording}
+          <Box className="flex-row justify-center gap-4 w-full max-w-xs">
+            <Button
+              variant="outline"
+              size="md"
+              className="flex-1"
+              onPress={handleDiscardRecording}
             >
               <Ionicons
-                name={isPlaying ? "stop" : "play"}
+                name="trash"
                 size={20}
-                color={isPlaying ? "#ffffff" : "#4f46e5"}
+                color="#9ca3af"
+                style={{ marginRight: 6 }}
               />
-              <Text
-                style={
-                  isPlaying ? styles.stopButtonText : styles.playButtonText
-                }
-              >
-                {isPlaying ? "Stop" : "Play"}
-              </Text>
-            </TouchableOpacity>
+              <ButtonText variant="outline">
+                Discard
+              </ButtonText>
+            </Button>
 
-            <TouchableOpacity
-              style={[styles.actionButton, styles.uploadButton]}
+            <Button
+              size="md"
+              className="flex-1"
               onPress={uploadLastRecording}
               disabled={uploading}
             >
@@ -160,256 +180,53 @@ export default function RecordingControls() {
                 name={uploading ? "cloud-upload-outline" : "cloud-upload"}
                 size={20}
                 color={uploading ? "#9ca3af" : "#ffffff"}
+                style={{ marginRight: 6 }}
               />
-              <Text style={styles.uploadButtonText}>
-                {uploading ? `${uploadProgress}%` : "Upload"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <ButtonText>
+                {uploading ? `${uploadProgress}%` : "Contribute"}
+              </ButtonText>
+            </Button>
+          </Box>
         ) : (
-          <View style={styles.actionButtonsPlaceholder} />
+          <Box className="h-10" />
         )}
-      </View>
+      </Box>}
 
-      {/* Playback Time Section - Fixed Height */}
-      <View style={styles.playbackTimeSection}>
+      {/* Playback Time Section */}
+      <Box className="h-8">
         {!recording && (isPlaying || playbackDuration > 0) ? (
-          <Text style={styles.playbackTimeText}>
-            {formatDuration(playbackPosition)} /{" "}
-            {formatDuration(playbackDuration)}
+          <Text 
+            size="lg" 
+            weight="medium" 
+            className="text-primary-600 font-mono tracking-wide"
+          >
+            {formatDuration(playbackPosition)} / {formatDuration(playbackDuration)}
           </Text>
         ) : (
-          <View style={styles.playbackTimePlaceholder} />
+          <Box className="h-8" />
         )}
-      </View>
+      </Box>
 
-      {/* Status Messages Section - Fixed Height */}
-      <View style={styles.statusMessageSection}>
+      {/* Status Messages Section */}
+      {uploadStatus && <Box className="h-8 justify-center items-center w-full mb-4">
         {uploadStatus && (
-          <Text
-            style={[
-              styles.statusText,
-              uploadStatus.includes("complete")
-                ? styles.statusSuccess
-                : styles.statusError,
-            ]}
-          >
-            {uploadStatus}
-          </Text>
+          <Card variant="outline" size="sm" className="px-4 py-2">
+            <CardBody>
+              <Text 
+                size="sm" 
+                className={`text-center ${
+                  uploadStatus.includes("complete") 
+                    ? "text-success-700" 
+                    : "text-error-700"
+                }`}
+              >
+                {uploadStatus}
+              </Text>
+            </CardBody>
+          </Card>
         )}
-      </View>
+      </Box>}
 
-      {/* Debug Information - For Development Only */}
-      <View style={styles.debugContainer}>
-        <Text style={styles.debugTitle}>🔧 Debug Info (Dev Only)</Text>
-        <Text style={styles.debugText}>
-          Recording URI: {lastRecordingUri ? "✓ Found" : "✗ None"}
-        </Text>
-        {lastRecordingUri && (
-          <Text style={styles.debugText} numberOfLines={2}>
-            Path: {lastRecordingUri}
-          </Text>
-        )}
-        {fileInfo && (
-          <>
-            <Text style={styles.debugText}>
-              File exists: {fileInfo.exists ? "✓" : "✗"}
-            </Text>
-            <Text style={styles.debugText}>
-              File size: {fileInfo.size} bytes
-            </Text>
-          </>
-        )}
-        {permissionStatus && (
-          <Text style={styles.debugText}>{permissionStatus}</Text>
-        )}
-      </View>
-    </View>
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "flex-start",
-    width: "100%",
-  },
-  recordingButtonContainer: {
-    marginBottom: 0,
-    marginTop: 60,
-  },
-  recordingButton: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  recordingButtonInactive: {
-    backgroundColor: "#ffffff",
-    borderWidth: 3,
-    borderColor: "#4f46e5",
-  },
-  recordingButtonActive: {
-    backgroundColor: "#ef4444",
-    borderWidth: 0,
-    transform: [{ scale: 0.95 }],
-  },
-  statusSection: {
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    marginBottom: 20,
-  },
-  recordingStatusContainer: {
-    alignItems: "center",
-  },
-  recordingIndicator: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  recordingDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#ef4444",
-    marginRight: 8,
-  },
-  recordingText: {
-    fontSize: 16,
-    color: "#374151",
-    fontWeight: "500",
-  },
-  durationText: {
-    fontSize: 32,
-    fontWeight: "300",
-    color: "#1f2937",
-    fontFamily: "monospace",
-    letterSpacing: 2,
-  },
-  placeholderContainer: {
-    height: 80,
-  },
-  actionSection: {
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    marginBottom: 16,
-  },
-  actionButtons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 16,
-    width: "100%",
-    maxWidth: 300,
-  },
-  actionButtonsPlaceholder: {
-    height: 48,
-  },
-  actionButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 12,
-    minWidth: 120,
-    height: 48,
-    justifyContent: "center",
-  },
-  playButton: {
-    backgroundColor: "#f8fafc",
-    borderWidth: 1.5,
-    borderColor: "#4f46e5",
-  },
-  playButtonText: {
-    marginLeft: 6,
-    fontSize: 16,
-    color: "#4f46e5",
-    fontWeight: "500",
-  },
-  stopButton: {
-    backgroundColor: "#dc2626",
-    borderWidth: 1.5,
-    borderColor: "#dc2626",
-  },
-  stopButtonText: {
-    marginLeft: 6,
-    fontSize: 16,
-    color: "#ffffff",
-    fontWeight: "500",
-  },
-  uploadButton: {
-    backgroundColor: "#4f46e5",
-  },
-  uploadButtonText: {
-    marginLeft: 6,
-    fontSize: 16,
-    color: "#ffffff",
-    fontWeight: "500",
-  },
-  playbackTimeSection: {
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    marginBottom: 16,
-  },
-  playbackTimeText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#4f46e5",
-    fontFamily: "monospace",
-    letterSpacing: 1,
-  },
-  playbackTimePlaceholder: {
-    height: 24,
-  },
-  statusMessageSection: {
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    marginBottom: 16,
-  },
-  statusText: {
-    fontSize: 14,
-    textAlign: "center",
-  },
-  statusSuccess: {
-    color: "#059669",
-  },
-  statusError: {
-    color: "#dc2626",
-  },
-  debugContainer: {
-    backgroundColor: "#f1f5f9",
-    padding: 12,
-    borderRadius: 8,
-    width: "100%",
-    maxWidth: 300,
-  },
-  debugTitle: {
-    fontSize: 14,
-    color: "#475569",
-    fontWeight: "600",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  debugText: {
-    fontSize: 12,
-    color: "#64748b",
-    fontFamily: "monospace",
-    marginBottom: 4,
-  },
-});

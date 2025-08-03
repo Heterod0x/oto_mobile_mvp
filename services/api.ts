@@ -32,6 +32,7 @@ export async function uploadAudio(
   token: string,
   onProgress?: (progress: number) => void
 ): Promise<UploadResponse> {
+  throw new Error("Not implemented");
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
@@ -251,7 +252,7 @@ export interface ClaimableAmountResponse {
 
 export async function fetchClaimableAmount(
   userId: string,
-  token: string,
+  token: string
 ): Promise<ClaimableAmountResponse> {
   const res = await fetch(`${API_BASE_URL}/point/claimable_amount`, {
     headers: {
@@ -273,7 +274,7 @@ export interface ClaimResponse {
 export async function claimPoints(
   txBase64: string,
   userId: string,
-  token: string,
+  token: string
 ): Promise<ClaimResponse> {
   const res = await fetch(`${API_BASE_URL}/point/claim`, {
     method: "POST",
@@ -288,10 +289,15 @@ export async function claimPoints(
     let errorMessage = `HTTP ${res.status}`;
     try {
       const errorData = await res.text();
-      console.error(`claimPoints API error - Status: ${res.status}, Response: ${errorData}`);
+      console.error(
+        `claimPoints API error - Status: ${res.status}, Response: ${errorData}`
+      );
       errorMessage = `HTTP ${res.status}: ${errorData}`;
     } catch (parseError) {
-      console.error(`claimPoints API error - Status: ${res.status}, Failed to parse error response:`, parseError);
+      console.error(
+        `claimPoints API error - Status: ${res.status}, Failed to parse error response:`,
+        parseError
+      );
     }
     throw new Error(errorMessage);
   }

@@ -27,7 +27,8 @@ export const usePrivyWallet = (): anchor.Wallet | null => {
     return {
       publicKey,
       signTransaction: sign,
-      signAllTransactions: async (txs: Transaction[]) => Promise.all(txs.map(sign)),
+      signAllTransactions: async (txs: Transaction[]) =>
+        Promise.all(txs.map(sign)),
     } as anchor.Wallet;
   }, [sol]);
 };

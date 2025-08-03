@@ -8,6 +8,9 @@ import { PrivyElements } from "@privy-io/expo/ui";
 import Constants from "expo-constants";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import "@/global.css";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -17,17 +20,20 @@ export default function RootLayout() {
   });
   if (!fontsLoaded) return null;
   return (
-    <PrivyProvider
-      appId={Constants.expoConfig?.extra?.privyAppId}
-      clientId={Constants.expoConfig?.extra?.privyClientId}
-      config={{
-        embeddedWallets: {
-          solana: { createOnLogin: "all-users" },
-        },
-      } as any}
-    >
-      <Stack screenOptions={{ headerShown: false }} />
-      <PrivyElements />
-    </PrivyProvider>
+    <GluestackUIProvider mode="light">
+      <StatusBar style="dark" backgroundColor="#ffffff" />
+      <PrivyProvider
+        appId={Constants.expoConfig?.extra?.privyAppId}
+        clientId={Constants.expoConfig?.extra?.privyClientId}
+        config={{
+          embeddedWallets: {
+            solana: { createOnLogin: "all-users" },
+          },
+        } as any}
+      >
+        <Stack screenOptions={{ headerShown: false }} />
+        <PrivyElements />
+      </PrivyProvider>
+    </GluestackUIProvider>
   );
 }

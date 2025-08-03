@@ -4,5 +4,6 @@ import { Redirect } from "expo-router";
 
 export default function Index() {
   const { user } = usePrivy();
-  return user ? <Redirect href="/(tabs)" /> : <LoginScreen />;
+  //return user ? <Redirect href="/(tabs)" /> : <LoginScreen />;
+  return <Redirect href="/(tabs)" />;
 }

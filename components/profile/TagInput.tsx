@@ -1,41 +1,45 @@
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { Box } from '@/components/ui/box';
+import { Text } from '@/components/ui/text';
+import { Input } from '@/components/ui/input';
 
 interface Props {
   label: string;
   value: string;
   onChange: (val: string) => void;
+  placeholder?: string;
 }
 
-export default function TagInput({ label, value, onChange }: Props) {
+export default function TagInput({ label, value, onChange, placeholder = "tag1, tag2" }: Props) {
+  const tags = value ? value.split(',').map(tag => tag.trim()).filter(Boolean) : [];
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={styles.input}
+    <Box>
+      {label && (
+        <Text size="sm" weight="medium" className="text-typography-700 mb-2">
+          {label}
+        </Text>
+      )}
+      <Input
         value={value}
         onChangeText={onChange}
-        placeholder="tag1, tag2"
+        placeholder={placeholder}
+        className="focus:border-primary-600"
+        multiline
       />
-    </View>
+      {tags.length > 0 && (
+        <Box className="flex-row flex-wrap mt-2 gap-2">
+          {tags.map((tag, index) => (
+            <Box
+              key={index}
+              className="bg-primary-100 px-3 py-1 rounded-full"
+            >
+              <Text size="xs" className="text-primary-700">
+                {tag}
+              </Text>
+            </Box>
+          ))}
+        </Box>
+      )}
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 12,
-  },
-  label: {
-    marginBottom: 4,
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    padding: 8,
-    fontSize: 14,
-    backgroundColor: '#fff',
-  },
-});
